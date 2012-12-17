@@ -1,0 +1,7 @@
+
+Tuntikirjanpito 
+
+17.12.2012
+	16:00-17:00 - Loin Git-repositorion, ja yritin saada toimimaan sen koneeltani.
+	17:00-18:00 - Kirjoitin aihemäärittelyn.
+	18:00-18:30 - Loin NetBeans-projektin ja tämän tuntikirjanpidon.
