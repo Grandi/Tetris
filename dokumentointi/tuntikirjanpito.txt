@@ -5,3 +5,12 @@ Tuntikirjanpito
 	16:00-17:00 - Loin Git-repositorion, ja yritin saada toimimaan sen koneeltani.
 	17:00-18:00 - Kirjoitin aihemäärittelyn.
 	18:00-18:30 - Loin NetBeans-projektin ja tämän tuntikirjanpidon.
+	
+18.12.2012
+	17:00-20:00 - Kirjoitin sovelluslogiikkaa.
+	00:00-02:00 - Kirjoitin sovelluslogiikkaa.
+	
+19.12.2012
+	16:00-18:00 - Kirjoitin testejä ja kommentoin osan sovelluslogiikasta pois saadakseni 100% testikattavuuden.
+	18:00-19:00 - Piirsin luokkakaavioita.
+	19:00-19:30 - Tappelin Gitin kanssa, jotta saisin nämä repooni.
