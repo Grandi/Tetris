@@ -5,3 +5,56 @@ Tuntikirjanpito
 	16:00-17:00 - Loin Git-repositorion, ja yritin saada toimimaan sen koneeltani.
 	17:00-18:00 - Kirjoitin aihemäärittelyn.
 	18:00-18:30 - Loin NetBeans-projektin ja tämän tuntikirjanpidon.
+	
+18.12.2012
+	17:00-20:00 - Kirjoitin sovelluslogiikkaa.
+	00:00-02:00 - Kirjoitin sovelluslogiikkaa.
+	
+19.12.2012
+	16:00-18:00 - Kirjoitin testejä ja kommentoin osan sovelluslogiikasta pois saadakseni 100% testikattavuuden.
+	18:00-19:00 - Piirsin luokkakaavioita.
+	19:00-19:30 - Tappelin Gitin kanssa, jotta saisin nämä repooni.
+
+21.12.2012
+	17:00-19:00 - Kirjoitin sovelluslogiikkaa.
+
+22.12.2012
+	20:00-22:00 - Kirjoitin sovelluslogiikkaa.
+	
+23.12.2012
+	16:00-18:00 - Kirjoitin sovelluslogiikkaa.
+	
+24.12.2012
+	20:00-21:00 - Kirjoitin sovelluslogiikkaa.
+	21:00-22:00 - Muutin hieman aiempien osien toimintaa.
+
+------
+	
+25.12.2012
+	20:00-21:00
+		<<< Aloitin koko projektin alusta, koska vanha oliosuunnitteluni ei ollut mielestäni tarpeeksi ylläpidettävää/muokattavaa. >>>
+	
+26.12.2012
+	13:00-16:00 - Kirjoitin sovelluslogiikkaa.
+
+29.12.2012
+	16:00-18:00 - Kirjoitin sovelluslogiikkaa.
+	18:00-19:00 - Kirjoitin testejä.
+	
+30.12.2012
+	22:00-00:00 - Kirjoitin sovelluslogiikkaa.
+	00:00-02:00 - Kirjoitin testejä.
+	
+31.12.2012
+	18:00-19:00 - Kirjoitin testejä.
+	
+1.1.2013
+	19:00-22:00 - Huomasin muutamia suunnitteluvirheitä koodissa, korjailin niitä.
+
+2.1.2012
+	17:00-21:00 - Kirjoitin testejä.
+	
+3.1.2012
+	16:00-20:00 - Huomasin vakavahkon suunnitteluvirheen palikoiden kääntämismenetelmässä. Kun yritin korjata sitä,
+		puolet testeistä eivät enää menneet läpi. Debuggausta + Korjailua.
+	20:00-21:00 - Piirsin luokkakaavion uudesta suunnitelmastani.
