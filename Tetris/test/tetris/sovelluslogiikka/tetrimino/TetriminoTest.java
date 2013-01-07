@@ -1,6 +1,7 @@
 
 package tetris.sovelluslogiikka.tetrimino;
 
+import tetris.sovelluslogiikka.sekalaiset.Suunta;
 import tetris.sovelluslogiikka.tetrimino.Tetrimino;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -29,13 +30,13 @@ public class TetriminoTest
     
     @Test public void kaantyyMyotapaivaan()
     {
-        tetrimino.kaannaMyotapaivaan();
+        tetrimino.kaanna(Suunta.OIKEA);
         assertEquals(1, tetrimino.asento());
     }
     
     @Test public void kaantyyVastapaivaan()
     {
-        tetrimino.kaannaVastapaivaan();
+        tetrimino.kaanna(Suunta.VASEN);
         assertEquals(3, tetrimino.asento());
     }
     
@@ -43,7 +44,7 @@ public class TetriminoTest
     {
         for(int i = 0; i < 4; i++)
         {
-            tetrimino.kaannaMyotapaivaan();
+            tetrimino.kaanna(Suunta.OIKEA);
             onHyvassaAsennossa();
         }
     }
@@ -52,7 +53,7 @@ public class TetriminoTest
     {
         for(int i = 0; i < 4; i++)
         {
-            tetrimino.kaannaVastapaivaan();
+            tetrimino.kaanna(Suunta.VASEN);
             onHyvassaAsennossa();
         }
     }

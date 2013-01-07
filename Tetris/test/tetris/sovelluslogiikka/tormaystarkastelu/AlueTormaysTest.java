@@ -1,8 +1,7 @@
 
 package tetris.sovelluslogiikka.tormaystarkastelu;
 
-import tetris.sovelluslogiikka.tormaystarkastelu.AlueTormays;
-import tetris.sovelluslogiikka.tormaystarkastelu.Tormayssuunta;
+import tetris.sovelluslogiikka.sekalaiset.Suunta;
 import tetris.sovelluslogiikka.sekalaiset.Sijainti;
 import tetris.sovelluslogiikka.sekalaiset.Alue;
 import tetris.sovelluslogiikka.sekalaiset.Palikka;
@@ -28,12 +27,12 @@ public class AlueTormaysTest
     @Test public void ulkonaOlevatTunnistetaanUlkonaoleviksi()
     {
         AlueTormays aluetormays = new AlueTormays(ulkonaOleva, alue);
-        Tormayssuunta[] suunnat = new Tormayssuunta[] { Tormayssuunta.VASEMMALLA, Tormayssuunta.YLHAALLA };
+        Suunta[] suunnat = new Suunta[] { Suunta.VASEN, Suunta.YLOS };
 
         assertTrue(Apufunktiot.sisaltaaSuunnat(aluetormays, suunnat));
         
         aluetormays = new AlueTormays(ulkonaOleva2, alue);
-        suunnat = new Tormayssuunta[] { Tormayssuunta.OIKEALLA, Tormayssuunta.ALHAALLA };
+        suunnat = new Suunta[] { Suunta.OIKEA, Suunta.ALAS };
         
         assertTrue(Apufunktiot.sisaltaaSuunnat(aluetormays, suunnat));
     }

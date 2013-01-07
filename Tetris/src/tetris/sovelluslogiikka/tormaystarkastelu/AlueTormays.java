@@ -1,33 +1,41 @@
 
 package tetris.sovelluslogiikka.tormaystarkastelu;
 
+import tetris.sovelluslogiikka.sekalaiset.Suunta;
 import java.util.ArrayList;
 import tetris.sovelluslogiikka.sekalaiset.Alue;
 import tetris.sovelluslogiikka.sekalaiset.Palikka;
-import tetris.sovelluslogiikka.sekalaiset.Sijainti;
 
+/** Määrittää törmäyksen palikan ja alueen kanssa. Ideana on, että palikan tulisi olla
+ * alueen sisäpuolella, ja törmääminen on näin ollen alueen rajojen ulkopuolelle päätymistä.
+ * @author grandi
+ */
 public class AlueTormays implements Tormays
 {
     private Palikka palikka;
     private Alue alue;
     
+    /**
+     * @param palikka Palikka, jonka törmäämistä tutkitaan.
+     * @param alue Alue, jonka sisäpuolella palikan kuuluisi olla.
+     */
     public AlueTormays(Palikka palikka, Alue alue)
     {
         this.palikka = palikka;
         this.alue = alue;
     }
     
-    @Override public ArrayList<Tormayssuunta> suunnat()
+    @Override public ArrayList<Suunta> suunnat()
     {
         if(alue.onSisalla(palikka.sijainti()))
-            return new ArrayList<Tormayssuunta>();
+            return new ArrayList<Suunta>();
 
         return paatteleSuunnat();
     }
     
-    private ArrayList<Tormayssuunta> paatteleSuunnat()
+    private ArrayList<Suunta> paatteleSuunnat()
     {
-        ArrayList<Tormayssuunta> suunnat = new ArrayList<Tormayssuunta>();
+        ArrayList<Suunta> suunnat = new ArrayList<Suunta>();
 
         if(vaakasuunnassa() != null)
             suunnat.add(vaakasuunnassa());
@@ -38,22 +46,22 @@ public class AlueTormays implements Tormays
         return suunnat;
     }
     
-    private Tormayssuunta vaakasuunnassa()
+    private Suunta vaakasuunnassa()
     {
         if(palikka.sijainti().x() < alue.alkupiste().x())
-            return Tormayssuunta.VASEMMALLA;
+            return Suunta.VASEN;
         else if(palikka.sijainti().x() > alue.paatepiste().x())
-            return Tormayssuunta.OIKEALLA;
+            return Suunta.OIKEA;
         else
             return null;
     }
     
-    private Tormayssuunta pystysuunnassa()
+    private Suunta pystysuunnassa()
     {
         if(palikka.sijainti().y() > alue.paatepiste().y())
-            return Tormayssuunta.ALHAALLA;
+            return Suunta.ALAS;
         else if(palikka.sijainti().y() < alue.alkupiste().y())
-            return Tormayssuunta.YLHAALLA;
+            return Suunta.YLOS;
         else
             return null;
     }

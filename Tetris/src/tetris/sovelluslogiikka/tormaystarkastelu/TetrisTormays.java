@@ -1,46 +1,57 @@
 
 package tetris.sovelluslogiikka.tormaystarkastelu;
 
+import tetris.sovelluslogiikka.sekalaiset.Suunta;
 import java.util.ArrayList;
 import java.util.HashMap;
 import tetris.sovelluslogiikka.sekalaiset.Palikka;
-import tetris.sovelluslogiikka.pelialue.TetrisPelialue;
+import tetris.sovelluslogiikka.pelialue.Pelialue;
 import tetris.sovelluslogiikka.tetrimino.Tetrimino;
 
+/** Määrittää Tetris-törmäyksen, eli tetriminon ja Tetris-pelialueen välisen törmäyksen.
+ * @author grandi
+ */
 public class TetrisTormays implements Tormays
 {
     private ArrayList<Tormays> tormaykset;
     
-    public TetrisTormays(Tetrimino tetrimino, TetrisPelialue pelialue)
+    /** Tarkistaa törmäykset tetriminon ja pelialueen välillä.
+     * @param tetrimino Tetrimino, jonka törmäämistä tutkitaan.
+     * @param pelialue Pelialue, jonka törmäämistä tutkitaan.
+     */
+    public TetrisTormays(Tetrimino tetrimino, Pelialue pelialue)
     {
         tormaykset = new ArrayList<Tormays>();
         
         for(Palikka palikka : tetrimino.palikkakokoelma().palikat())
-            if(pelialue.onSisalla(palikka.sijainti()))
-                lisaaPalikoidenValinenTormays(palikka, tetrimino, pelialue);
+            if(pelialue.alue().onSisalla(palikka.sijainti()))
+                tarkistaTormaakoPalikkaPelialueeseen(palikka, tetrimino, pelialue);
             else
-                tormaykset.add(new AlueTormays(palikka, pelialue)); 
+                tormaykset.add(new AlueTormays(palikka, pelialue.alue())); 
     }
-    
-    private void lisaaPalikoidenValinenTormays(Palikka palikka, Tetrimino tetrimino, TetrisPelialue pelialue)
+
+    private void tarkistaTormaakoPalikkaPelialueeseen(Palikka palikka, Tetrimino tetrimino, Pelialue pelialue)
     {
-        Palikka pelialueelta = pelialue.sisaltaaPalikan(palikka.sijainti());
+        Palikka pelialueelta = pelialue.haePalikka(palikka.sijainti());
 
         if(pelialueelta != null)
             tormaykset.add(new PalikoidenValinenTormays(palikka, pelialueelta, tetrimino.sijainti()));
     }
     
-    @Override public ArrayList<Tormayssuunta> suunnat()
+    @Override public ArrayList<Suunta> suunnat()
     {
-        HashMap<Tormayssuunta, Integer> suunnat = new HashMap<Tormayssuunta, Integer>();
+        HashMap<Suunta, Integer> suunnat = new HashMap<Suunta, Integer>();
         
         for(Tormays tormays : tormaykset)
-            for(Tormayssuunta tormayssuunta : tormays.suunnat())
+            for(Suunta tormayssuunta : tormays.suunnat())
                 suunnat.put(tormayssuunta, 1);
         
-        return new ArrayList<Tormayssuunta>(suunnat.keySet());
+        return new ArrayList<Suunta>(suunnat.keySet());
     }
     
+    /** Palauttaa listan tapahtuneista törmäyksistä. Sisältää AlueTormays- ja/tai PalikoidenValinenTormays-olioita.
+     * @return ArrayList, joka sisältää tapahtuneet törmäykset. Mikäli tyhjä, törmäyksiä ei tapahtunut.
+     */
     public ArrayList<Tormays> tormaykset()
     {
         return tormaykset;

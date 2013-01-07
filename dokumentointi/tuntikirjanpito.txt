@@ -58,3 +58,17 @@ Tuntikirjanpito
 	16:00-20:00 - Huomasin vakavahkon suunnitteluvirheen palikoiden kääntämismenetelmässä. Kun yritin korjata sitä,
 		puolet testeistä eivät enää menneet läpi. Debuggausta + Korjailua.
 	20:00-21:00 - Piirsin luokkakaavion uudesta suunnitelmastani.
+	
+4.1.2012
+	20:00-0:00 - Kirjotin sovelluslogiikkaa ja testejä.
+	
+5.1.2012
+	00:00-07:00 - Kirjoitin sovelluslogiikkaa ja testejä.
+	16:00-18:00 - Kirjoitin sovelluslogiikkaa ja testejä.
+	20:00-22:00 - Aloitin käyttöliittymän tekemisen.
+	
+6.1.2012
+	07:00-21:00 - Kirjoitin sovelluslogiikkaa, käyttöliittymää ja testejä.
+		Päivitin kaikille luokille ja julkisille metodeille javadocit.
+		Piirsin myös kaksi sekvenssikaaviota ja uuden luokkakaavion deadlineen.
+

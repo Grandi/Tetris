@@ -17,7 +17,7 @@ public class TetriminonRakentajaTest
     
     @Test public void tetriminojenSatunnaisgenerointiToimii()
     {
-        rakentaja.luoTyypillinenTetrisPalikka();
+        rakentaja.luoTyypillinenTetrisPalikka(new Sijainti(2, 5));
 
         assertTrue( rakentaja.rakennettuTetrimino().palikkakokoelma() instanceof TetriminoPalikkakokoelma );
         assertEquals(4, rakentaja.rakennettuTetrimino().palikkakokoelma().lisattyja());

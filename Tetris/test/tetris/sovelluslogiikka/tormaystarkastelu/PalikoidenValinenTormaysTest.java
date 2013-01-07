@@ -1,7 +1,8 @@
 
 package tetris.sovelluslogiikka.tormaystarkastelu;
 
-import tetris.sovelluslogiikka.tormaystarkastelu.Tormayssuunta;
+import tetris.sovelluslogiikka.sekalaiset.TetrisPalikka;
+import tetris.sovelluslogiikka.sekalaiset.Suunta;
 import tetris.sovelluslogiikka.tormaystarkastelu.PalikoidenValinenTormays;
 import tetris.sovelluslogiikka.sekalaiset.Sijainti;
 import tetris.sovelluslogiikka.sekalaiset.Palikka;
@@ -14,9 +15,9 @@ public class PalikoidenValinenTormaysTest
 {   
     @Before public void setUp() {}
     
-    private void testaaAntaakoOikeatSuunnat(Sijainti tormayksenSijainti, Sijainti vertailupiste, Tormayssuunta[] vaaditut)
+    private void testaaAntaakoOikeatSuunnat(Sijainti tormayksenSijainti, Sijainti vertailupiste, Suunta[] vaaditut)
     {
-        Palikka palikka = new Palikka(tormayksenSijainti);
+        Palikka palikka = new TetrisPalikka(tormayksenSijainti);
         PalikoidenValinenTormays tormays = new PalikoidenValinenTormays(palikka, palikka, vertailupiste);
         
         assertTrue(Apufunktiot.sisaltaaSuunnat(tormays, vaaditut));
@@ -24,16 +25,16 @@ public class PalikoidenValinenTormaysTest
     
     @Test public void antaaOikeatSuunnat()
     {
-        Tormayssuunta[] vaaditut = new Tormayssuunta[] { Tormayssuunta.VASEMMALLA, Tormayssuunta.YLHAALLA };
+        Suunta[] vaaditut = new Suunta[] { Suunta.VASEN, Suunta.YLOS };
         testaaAntaakoOikeatSuunnat(new Sijainti(1, 1), new Sijainti(2, 2), vaaditut);
         
-        vaaditut = new Tormayssuunta[] { Tormayssuunta.OIKEALLA, Tormayssuunta.ALHAALLA };
+        vaaditut = new Suunta[] { Suunta.OIKEA, Suunta.ALAS };
         testaaAntaakoOikeatSuunnat(new Sijainti(3, 3), new Sijainti(2, 2), vaaditut);
     }
     
     @Test public void eiAnnaSuuntaaMikaliVertailupisteOnSamassaKohtaaTormayksenKanssa()
     {
-        testaaAntaakoOikeatSuunnat(new Sijainti(1, 1), new Sijainti(1, 1), new Tormayssuunta[] {});
+        testaaAntaakoOikeatSuunnat(new Sijainti(1, 1), new Sijainti(1, 1), new Suunta[] {});
     }
     
     @Test public void tormayksenOsapuoletOvatOikein()

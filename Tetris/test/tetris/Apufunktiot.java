@@ -9,20 +9,22 @@ import tetris.sovelluslogiikka.sekalaiset.Sijainti;
 import tetris.sovelluslogiikka.tetrimino.Tetrimino;
 import tetris.sovelluslogiikka.tetrimino.TetriminonRakentaja;
 import tetris.sovelluslogiikka.tormaystarkastelu.Tormays;
-import tetris.sovelluslogiikka.tormaystarkastelu.Tormayssuunta;
+import tetris.sovelluslogiikka.sekalaiset.Suunta;
+import tetris.sovelluslogiikka.sekalaiset.TetrisPalikka;
+import tetris.sovelluslogiikka.tetrimino.TetriminoPalikka;
 
 public class Apufunktiot
 {
     public static Palikka uusiPalikka(int x, int y)
     {
-        return new Palikka(new Sijainti(x, y));
+        return new TetrisPalikka(new Sijainti(x, y));
     }
     
-    public static boolean sisaltaaSuunnat(Tormays tormays, ArrayList<Tormayssuunta> suunnat)
+    public static boolean sisaltaaSuunnat(Tormays tormays, ArrayList<Suunta> suunnat)
     {
-        ArrayList<Tormayssuunta> tunnistetut = tormays.suunnat();
+        ArrayList<Suunta> tunnistetut = tormays.suunnat();
         
-        for(Tormayssuunta tormayssuunta : tunnistetut)
+        for(Suunta tormayssuunta : tunnistetut)
             if(suunnat.contains(tormayssuunta))
                 suunnat.remove(tormayssuunta);
             else
@@ -31,9 +33,9 @@ public class Apufunktiot
         return suunnat.isEmpty();
     }
     
-    public static boolean sisaltaaSuunnat(Tormays tormays, Tormayssuunta[] suunnat)
+    public static boolean sisaltaaSuunnat(Tormays tormays, Suunta[] suunnat)
     {
-        return sisaltaaSuunnat(tormays, new ArrayList<Tormayssuunta>(Arrays.asList(suunnat)));
+        return sisaltaaSuunnat(tormays, new ArrayList<Suunta>(Arrays.asList(suunnat)));
     }
     
     public static Tetrimino luoTetriminoTestaamistaVarten(Sijainti sijainti)

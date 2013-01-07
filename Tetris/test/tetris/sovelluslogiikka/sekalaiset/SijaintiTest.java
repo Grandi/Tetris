@@ -17,21 +17,21 @@ public class SijaintiTest
     
     @Test public void koordinaatitOvatOikein()
     {
-        assertEquals(5, sijainti.x());
-        assertEquals(-2, sijainti.y());
+        assertEquals(5, sijainti.x(), 1.0);
+        assertEquals(-2, sijainti.y(), 1.0);
     }
     
     @Test public void vertailuToimii()
     {
-        assertTrue(new Sijainti(5, -2).onSamaKuin(sijainti));
-        assertFalse(new Sijainti(3, -2).onSamaKuin(sijainti));
+        assertTrue(new Sijainti(5, -2).equals(sijainti));
+        assertFalse(new Sijainti(3, -2).equals(sijainti));
     }
     
     @Test public void sijaintejaVoiKopioida()
     {
         Sijainti toinen = new Sijainti(sijainti);
         
-        assertTrue(toinen.onSamaKuin(sijainti));
+        assertTrue(toinen.equals(sijainti));
         assertFalse(toinen == sijainti);
     }
     
@@ -40,11 +40,11 @@ public class SijaintiTest
         sijainti.asetaX(-1);
         sijainti.asetaY(4);
         
-        assertTrue(new Sijainti(-1, 4).onSamaKuin(sijainti));
+        assertTrue(new Sijainti(-1, 4).equals(sijainti));
     }
     
     @Test public void toStringToimii()
     {
-        assertEquals("(5,-2)", sijainti.toString());
+        assertEquals("(5.0,-2.0)", sijainti.toString());
     }
 }

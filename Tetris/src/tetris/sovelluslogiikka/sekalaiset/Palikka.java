@@ -1,17 +1,13 @@
 
 package tetris.sovelluslogiikka.sekalaiset;
 
-public class Palikka
+/** Määrittää palikan.
+ * @author grandi
+ */
+public interface Palikka
 {
-    protected Sijainti sijainti;
-    
-    public Palikka(Sijainti sijainti)
-    {
-        this.sijainti = new Sijainti(sijainti);
-    }
-    
-    public Sijainti sijainti()
-    {
-        return sijainti;
-    }
+    /** Kertoo palikan tämänhetkisen sijainnin.
+     * @return Palikan sijainti.
+     */
+    public Sijainti sijainti();
 }
