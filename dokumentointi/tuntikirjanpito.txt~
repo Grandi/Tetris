@@ -67,15 +67,8 @@ Tuntikirjanpito
 	16:00-18:00 - Kirjoitin sovelluslogiikkaa ja testejä.
 	20:00-22:00 - Aloitin käyttöliittymän tekemisen.
 	
-7.1.2012
+6.1.2012
 	07:00-21:00 - Kirjoitin sovelluslogiikkaa, käyttöliittymää ja testejä.
 		Päivitin kaikille luokille ja julkisille metodeille javadocit.
 		Piirsin myös kaksi sekvenssikaaviota ja uuden luokkakaavion deadlineen.
-		
-8.1.2012
-	13:00-20:00 - Tein asetusvalikkoa peliin, lisäsin javadoc-kommentteja ja testejä.
-	
-9.1.2012
-	07:00-20:00 - Javadoc-kommentoin koko sovelluslogiikan, lisäsin vielä puuttuvia testejä.
-					Korjailin myös joitain ohjelmassa esiintyneitä bugeja.
 
