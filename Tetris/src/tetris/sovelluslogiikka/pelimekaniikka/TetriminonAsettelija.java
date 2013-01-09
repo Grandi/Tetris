@@ -14,8 +14,13 @@ import tetris.sovelluslogiikka.tormaystarkastelu.TetrisTormays;
  */
 public class TetriminonAsettelija
 {
+    /** Tetrimino, jota tahdotaan asetella pelialueella. */
     private Tetrimino tetrimino;
+    
+    /** Tetriminoa ympäröivä pelialue. */
     private Pelialue pelialue;
+    
+    /** TetrisTormays-olio törmäystarkasteluun pelialueen ja tetriminon välillä. */
     private TetrisTormays tormays;
     
     /**
@@ -28,6 +33,9 @@ public class TetriminonAsettelija
         this.pelialue = pelialue;
     }
     
+    /** Päivittää törmäykset pelialueen ja tetriminon välillä.
+     * @return Palauttaa törmäykset sisältävän TetrisTormays-olion.
+     */
     private TetrisTormays paivitaTormaystarkistus()
     {
         tormays = new TetrisTormays(tetrimino, pelialue);
@@ -77,6 +85,9 @@ public class TetriminonAsettelija
         return true;
     }
 
+    /** Tarkistaa, törmääkö tetrimino pelialueeseen, ja jos törmää, yrittää korjata sijainnin.
+     * @return Palauttaa true, jos korjaaminen onnistui. Muutoin false.
+     */
     private boolean korjaaSijainti()
     {
         ArrayList<Suunta> suunnat = paivitaTormaystarkistus().suunnat();

@@ -3,6 +3,7 @@ package tetris.sovelluslogiikka.tormaystarkastelu;
 
 import tetris.sovelluslogiikka.sekalaiset.Suunta;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import tetris.sovelluslogiikka.sekalaiset.Palikka;
 import tetris.sovelluslogiikka.pelialue.Pelialue;
@@ -13,6 +14,7 @@ import tetris.sovelluslogiikka.tetrimino.Tetrimino;
  */
 public class TetrisTormays implements Tormays
 {
+    /** Kokoelma tapahtuneita törmäyksiä. */
     private ArrayList<Tormays> tormaykset;
     
     /** Tarkistaa törmäykset tetriminon ja pelialueen välillä.
@@ -23,13 +25,26 @@ public class TetrisTormays implements Tormays
     {
         tormaykset = new ArrayList<Tormays>();
         
-        for(Palikka palikka : tetrimino.palikkakokoelma().palikat())
-            if(pelialue.alue().onSisalla(palikka.sijainti()))
-                tarkistaTormaakoPalikkaPelialueeseen(palikka, tetrimino, pelialue);
-            else
-                tormaykset.add(new AlueTormays(palikka, pelialue.alue())); 
+        try {
+            for(Palikka palikka : tetrimino.palikkakokoelma().palikat())
+            {
+                if(palikka == null)
+                    continue;
+                
+                if(pelialue.alue().onSisalla(palikka.sijainti()))
+                    tarkistaTormaakoPalikkaPelialueeseen(palikka, tetrimino, pelialue);
+                else
+                    tormaykset.add(new AlueTormays(palikka, pelialue.alue())); 
+            }
+        } catch(ConcurrentModificationException e) {}
     }
 
+    /** Tarkistaa törmääkö tetriminon palikka pelialueeseen.
+     * 
+     * @param palikka Palikka, jonka törmäämisestä olemme kiinnostuneita.
+     * @param tetrimino Tetrimino, johon palikka kuuluu.
+     * @param pelialue Pelialue, johon palikan oletetaan voivan törmätä.
+     */
     private void tarkistaTormaakoPalikkaPelialueeseen(Palikka palikka, Tetrimino tetrimino, Pelialue pelialue)
     {
         Palikka pelialueelta = pelialue.haePalikka(palikka.sijainti());

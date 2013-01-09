@@ -15,10 +15,19 @@ import tetris.sovelluslogiikka.sekalaiset.TetrisPalikka;
  */
 public class Pelialue implements Palikkakokoelma
 {
+    /** Hajautustaulu; sijainti => sijainnissa oleva palikka. */
     private HashMap<Sijainti, TetrisPalikka> palikat;
+    
+    /** Hajautustaulu, joka kertoo, kuinka monta palikkaa rivillä on. */
     private HashMap<Float, Integer> lisattyja;
+    
+    /** Alue, jonka tämä pelialue muodostaa. */
     private Alue alue;
     
+    /** Korjaa rivin y-akselin pelialueenmukaisesti. Rivit kasvavat ylöspäin, pelialue alaspäin.
+     * @param y Y-akseli, joka tahdotaan kääntää oikeaksi.
+     * @return Käännetty y-akseli.
+     */
     private float korjattuY(float y)
     {
         return alue.paatepiste().y()-y;
@@ -36,6 +45,10 @@ public class Pelialue implements Palikkakokoelma
         lisattyja = new HashMap<Float, Integer>();
     }
     
+    /** Päivittää sen kuinka monta palikkaa tietyllä rivillä on.
+     * @param rivi Rivi, jonka palikkamäärää tahdotaan muokata.
+     * @param muutos Palikoiden määrän muutos, positiivinen tai negatiivinen.
+     */
     private void paivitaLisatyt(float rivi, int muutos)
     {
         if(!lisattyja.containsKey(rivi))
@@ -54,7 +67,7 @@ public class Pelialue implements Palikkakokoelma
         if(!alue.onSisalla(palikka.sijainti()) || haePalikka(palikka.sijainti()) != null)
             return false;
 
-        palikat.put(palikka.sijainti(), new TetrisPalikka(palikka));
+        palikat.put(palikka.sijainti(), new TetrisPalikka((TetrisPalikka)palikka));
         paivitaLisatyt(korjattuY(palikka.sijainti().y()), 1);
         return true;
     }
@@ -79,6 +92,7 @@ public class Pelialue implements Palikkakokoelma
 
     @Override public void tyhjenna()
     {
+        lisattyja.clear();
         palikat.clear();
     }
 
@@ -114,12 +128,15 @@ public class Pelialue implements Palikkakokoelma
      */
     public int palikoitaRivilla(float rivinumero)
     {
-        rivinumero = korjattuY(rivinumero);
         return !lisattyja.containsKey(rivinumero) ? 0 : lisattyja.get(rivinumero);
     }
     
+    /** Kertoo onko rivi täysi.
+     * @param rivinumero Rivi, jonka täytenäoleminen tahdotaan tietää.
+     * @return True, jos rivi on täysi. Muuten false.
+     */
     public boolean riviOnTaysi(float rivinumero)
     {
-        return lisattyja.get(korjattuY(rivinumero)) == alue.leveys();
+        return lisattyja.containsKey(rivinumero) && lisattyja.get(rivinumero) > alue.leveys();
     }
 }

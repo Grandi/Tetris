@@ -10,8 +10,16 @@ import tetris.sovelluslogiikka.sekalaiset.TetrisPalikka;
  */
 public class PudotusMuutos extends Muutos
 {
+    /** Palikka, joka pudotetaan. */
     private TetrisPalikka palikka;
-    private Sijainti maaranpaa, alkuperainenSijainti;
+    
+    /** Sijainti, jota kohti palikkaa siirretään. */
+    private Sijainti maaranpaa;
+    
+    /** Palikan alkuperainen sijainti. */     
+    private Sijainti alkuperainenSijainti;
+    
+    /** Pelialue, jolla palikkaa liu'utetaan. */
     private Pelialue pelialue;
     
     /**
@@ -27,6 +35,9 @@ public class PudotusMuutos extends Muutos
         this.alkuperainenSijainti = sijainti;
     }
     
+    /** Kertoo, onko palikka niin lähellä määränpäätä, että se jo oikeastaan on jo siellä.
+     * @return True, jos on tarpeeksi lähellä. Muutoin false.
+     */
     private boolean onTarpeeksiLahella()
     {
         return Math.abs(palikka.sijainti().x() - maaranpaa.x()) < 0.1 && Math.abs(palikka.sijainti().y() - maaranpaa.y()) < 0.1;

@@ -30,7 +30,7 @@ public class PoistoMuutosTest
     {
         int edellinen = palikka.vari().peittavyys();
         
-        for(int i = 0; i < 3; i++)
+        for(int i = 0; i <= 3; i++)
         {
             muutos.paivita();
             assertTrue( edellinen > palikka.vari().peittavyys() );

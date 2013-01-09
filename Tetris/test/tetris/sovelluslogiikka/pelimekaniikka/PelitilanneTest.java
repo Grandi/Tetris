@@ -7,23 +7,23 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class PelinTilaTest
+public class PelitilanneTest
 {
-    private PelinTila tila;
+    private Pelitilanne tila;
     
     @Before public void setUp()
     {
-        tila = new PelinTila();
+        tila = new Pelitilanne();
     }
     
     @Test public void alussaTunnisteetOvatNollissa()
     {
-        assertEquals(0, tila.arvo(PelinTila.Tunniste.PISTEET));
+        assertEquals(0, tila.arvo(Pelitilanne.Tunniste.PISTEET));
     }
     
     @Test public void arvojenAsettaminenToimii()
     {
-        tila.aseta(PelinTila.Tunniste.PISTEET, 8);
-        assertEquals(8, tila.arvo(PelinTila.Tunniste.PISTEET));
+        tila.aseta(Pelitilanne.Tunniste.PISTEET, 8);
+        assertEquals(8, tila.arvo(Pelitilanne.Tunniste.PISTEET));
     }
 }

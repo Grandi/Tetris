@@ -10,8 +10,13 @@ import tetris.sovelluslogiikka.sekalaiset.Suunta;
  */
 public class Tetrimino
 {
+    /** Palikkakokoelma, joka sisältää tetriminon palikat. */
     private TetriminoPalikkakokoelma palikkakokoelma;
+    
+    /** Kertoo kuinka paljon tetriminoa on siirretty. */
     private Sijainti siirtyma;
+    
+    /** Kertoo tetriminon asennon. */
     private int asento;
     
     public Tetrimino()

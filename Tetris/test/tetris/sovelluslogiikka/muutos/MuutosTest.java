@@ -15,6 +15,12 @@ public class MuutosTest
         muutos2 = new MuutosTestaustaVarten();
     }
     
+    @Test public void onAluksiLaukaistuJaEiOleValmis()
+    {
+        assertTrue(!muutos1.onValmis());
+        assertTrue(muutos1.onLaukaistu());
+    }
+    
     @Test public void laukaisijaksiAsettaminenToimii()
     {
         assertTrue(muutos2.onLaukaistu());

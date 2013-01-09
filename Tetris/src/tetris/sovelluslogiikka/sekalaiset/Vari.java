@@ -1,6 +1,8 @@
 
 package tetris.sovelluslogiikka.sekalaiset;
 
+import java.util.Random;
+
 /** Määrittää asian värin. Tämä on melko surkuhupaisa luokka, koska:
  * a) kommenttia on enemmän kuin itse koodia.
  * b) Javasta löytyisi jo valmis Color-luokka.
@@ -22,7 +24,21 @@ public class Vari
         asetaVihrea(g);
         asetaSininen(b);
         asetaPeittavyys(a);
-    }    
+    }
+    
+    /** Valitsee sattumanvaraisen värin paletista.
+     * @param satunnaisgeneraattori Satunnaisgeneraattori, joka määrää värin.
+     */
+    final public void aseta(Random satunnaisgeneraattori)
+    {
+        switch(satunnaisgeneraattori.nextInt(4))
+        {
+            case 0: aseta(255, 38, 0, 255); break;
+            case 1: aseta(0, 38, 255, 255); break;
+            case 2: aseta(38, 127, 0, 255); break;
+            case 3: aseta(178, 0, 255, 255); break;
+        }
+    }
     
     /** Asettaa värin samaksi kuin toinen väri-olio.
      * @param vari Väri, josta värisävyn lukuarvot kopioidaan.
@@ -49,6 +65,14 @@ public class Vari
     public Vari(Vari kopioitava)
     {
         aseta(kopioitava);
+    }
+    
+    /** Asettaa sattumanvaraisen värin paletista.
+     * @param satunnaisgeneraattori Satunnaisgeneraattori, joka määrää värin.
+     */
+    public Vari(Random satunnaisgeneraattori)
+    {
+        aseta(satunnaisgeneraattori);
     }
     
     /** Varmistaa, että väriarvo on väliltä 0-255. Korvaa liian suuret ja pienet arvot toimivilla raja-arvoilla.
@@ -137,6 +161,7 @@ public class Vari
     {
         return punainen == vertailtava.punainen() &&
                vihrea == vertailtava.vihrea() &&
-               sininen == vertailtava.sininen();
+               sininen == vertailtava.sininen() &&
+               peittavyys == vertailtava.peittavyys();
     }
 }

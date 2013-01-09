@@ -2,13 +2,20 @@
 package tetris.kayttoliittyma;
 
 import java.util.Random;
-import tetris.sovelluslogiikka.pelimekaniikka.PelinTila;
+import tetris.sovelluslogiikka.muutos.PelitilanteenPaivittaja;
+import tetris.sovelluslogiikka.pelimekaniikka.Pelitilanne;
 import tetris.sovelluslogiikka.pelimekaniikka.PelitilanteenPiirtaja;
 import tetris.sovelluslogiikka.pelimekaniikka.TetriminonAsettelija;
 import tetris.sovelluslogiikka.pelialue.Pelialue;
 import tetris.sovelluslogiikka.pelialue.PelialueenRakentaja;
+import tetris.sovelluslogiikka.pelimekaniikka.Aavetetrimino;
+import tetris.sovelluslogiikka.pelimekaniikka.Asetukset;
+import tetris.sovelluslogiikka.sekalaiset.Ajastin;
+import tetris.sovelluslogiikka.sekalaiset.Palikka;
 import tetris.sovelluslogiikka.sekalaiset.Sijainti;
 import tetris.sovelluslogiikka.sekalaiset.Suunta;
+import tetris.sovelluslogiikka.sekalaiset.TetrisPalikka;
+import tetris.sovelluslogiikka.sekalaiset.Vari;
 import tetris.sovelluslogiikka.tetrimino.Tetrimino;
 import tetris.sovelluslogiikka.tetrimino.TetriminonRakentaja;
 
@@ -17,19 +24,59 @@ import tetris.sovelluslogiikka.tetrimino.TetriminonRakentaja;
  */
 public class Ohjaus
 {
+    /** Piirtää pelitilanteen. */
     private PelitilanteenPiirtaja pelitilanteenPiirtaja;
+    
+    /** Päivittää pelitilanteen. */
+    private PelitilanteenPaivittaja pelialueenPaivittaja;
+    
+    /** Pitää huolta aavetetriminosta. */
+    private Aavetetrimino aavetetrimino;
+    
+    /** Tetrimino, jota pelissä ohjataan. */
     private Tetrimino tetrimino;
+    
+    /** Pelialue, jolla pelataan. */
     private Pelialue pelialue;
-    private PelinTila tila;
+    
+    /** Asetukset, joiden mukaan toimitaan. */
+    private Asetukset asetukset;
+    
+    /** Pelitilanne, joka kirjaa pisteet ja vastaavat. */
+    private Pelitilanne pelitilanne;
+    
 
-    public Ohjaus()
+    public Ohjaus(Asetukset asetukset)
     {
+        this.asetukset = asetukset;
+        this.pelitilanne = new Pelitilanne();
+        
         this.pelialue = new Pelialue(new Sijainti(0, 0), 10, 20);
-        
-        //new PelialueenRakentaja(pelialue).esitaytaRivit(3);
-        
+        rakennaPelialue();
         uusiTetrimino();
-        this.tila = new PelinTila();
+        
+        this.pelialueenPaivittaja = new PelitilanteenPaivittaja(pelialue, pelitilanne);
+        this.aavetetrimino = new Aavetetrimino(tetrimino, pelialue);
+    }
+    
+    /** Alustaa uuden pelin.
+     */
+    public void alustaUusiPeli()
+    {
+        pelitilanne.alusta();
+        pelialueenPaivittaja.tyhjennaMuutokset();
+        pelialue.tyhjenna();
+        
+        rakennaPelialue();
+        uusiTetrimino();
+        
+        aavetetrimino.paivita();
+    }
+    
+    /** Palauttaa nykyisen pelitilanteen. */
+    public Pelitilanne pelitilanne()
+    {
+        return pelitilanne;
     }
     
     /** Asettaa sen pelitilanteen piirtäjän, jolla pelitilanne tahdotaan piirtää.
@@ -41,6 +88,7 @@ public class Ohjaus
         
         pelitilanteenPiirtaja.lisaaSeurattavaPalikkakokoelma(tetrimino.palikkakokoelma());
         pelitilanteenPiirtaja.lisaaSeurattavaPalikkakokoelma(pelialue);
+        pelitilanteenPiirtaja.lisaaSeurattavaPalikkakokoelma(aavetetrimino.tetrimino().palikkakokoelma());
     }
     
     /** Kertoo, onko peli käynnissä. 
@@ -48,29 +96,58 @@ public class Ohjaus
      */
     public boolean peliOnKaynnissa()
     {
-        return !tila.peliOnPaattynyt();
+        return !pelitilanne.peliOnPaattynyt();
     }
     
+    /** Rakentaa uuden pelialueen.
+     */
+    private void rakennaPelialue()
+    {
+        PelialueenRakentaja rakentaja = new PelialueenRakentaja(pelialue);
+        
+        if(asetukset.esitaytettavatRivit() > 0)
+            rakentaja.esitaytaRivit(asetukset.esitaytettavatRivit());
+
+        rakentaja.varita();
+    }
+    
+    /** Luo uuden tetriminon ruudun yläosaan.
+     */
     private void uusiTetrimino()
     {
         if(tetrimino != null)
             tetrimino.alusta();
         else
             tetrimino = new Tetrimino();
-
-        Sijainti sijainti = new Sijainti(pelialue.alue().alkupiste().x() + pelialue.alue().leveys()/2, 1);
-        new TetriminonRakentaja(tetrimino, new Random()).luoTyypillinenTetrisPalikka(sijainti);
         
+        if(pelitilanne.peliOnPaattynyt())
+            return;
+
+        Sijainti sijainti = new Sijainti(pelialue.alue().alkupiste().x() + pelialue.alue().leveys()/2, 0);
+        TetriminonRakentaja rakentaja = new TetriminonRakentaja(tetrimino, new Random());
+        
+        if(asetukset.palikoidenMaaraTetriminossa() != 0)
+            rakentaja.luoTyypillinenTetrisPalikka(sijainti, asetukset.palikoidenMaaraTetriminossa());
+        else
+            rakentaja.luoTyypillinenTetrisPalikka(sijainti, new Random().nextInt(2) + 4);
+        
+        rakentaja.varita();
         alustaTetriminonSijainti();
-        paivitaTilanne();
     }
     
+    /** Alustaa uuden tetriminon sijainnin.
+     */
     private void alustaTetriminonSijainti()
     {
+        while(asettelija().kokeileSiirtaa(Suunta.YLOS));
+        
         if(!asettelija().yritaPoistuaTormaamasta(Suunta.ALAS))
-            tila.paataPeli();
+            paataPeli();
     }
     
+    /**
+     * @return Uusi TetriminonAsettelija-olio tetriminolle ja pelialueelle.
+     */
     private TetriminonAsettelija asettelija()
     {
         return new TetriminonAsettelija(tetrimino, pelialue);
@@ -81,13 +158,12 @@ public class Ohjaus
      */
     public void siirraTetriminoa(Suunta suunta)
     {
-        if(suunta == Suunta.YLOS || !tila.voiLiikuttaa())
+        if(suunta == Suunta.YLOS || !pelitilanne.voiLiikuttaa())
             return;
         
         asettelija().kokeileSiirtaa(suunta);
-        tila.nappainAjastin().paivita();
+        pelitilanne.nappainAjastin().paivita();
         
-        //System.out.println("Foo: " + tetrimino.sijainti());
         paivitaTilanne();
     }
     
@@ -96,57 +172,123 @@ public class Ohjaus
      */
     public void kaannaTetriminoa(Suunta suunta)
     {
-        if(suunta == Suunta.YLOS || suunta == Suunta.ALAS || !tila.voiLiikuttaa())
+        if(suunta == Suunta.YLOS || suunta == Suunta.ALAS || !pelitilanne.voiLiikuttaa())
             return;
 
         asettelija().kokeileKaantaa(suunta);
-        tila.nappainAjastin().paivita();
-        paivitaTilanne();
+        pelitilanne.nappainAjastin().paivita();
         
-        //System.out.println(tetrimino.asento());
+        paivitaTilanne();
     }
     
     /** Välittää käyttäjän tahdon pudottaa tetrimino.
      */
     public void pudotaTetrimino()
     {
-        if(!tila.voiLiikuttaa())
+        if(!pelitilanne.voiLiikuttaa())
             return;
 
         asettelija().pudotaAlas();
         
-        tila.nappainAjastin().paivita();
-        tila.tiputusAjastin().paivita();
+        pelitilanne.nappainAjastin().paivita();
+        pelitilanne.tiputusAjastin().paivita();
         
         paivitaTilanne();
     }
     
+    /** Kertoo, onko tetrimino pelialueen yläosassa.
+     * @return True, jos on. Muutoin false.
+     */
+    private boolean tetriminoOnPelialueenYlaosassa()
+    {
+        for(Palikka palikka : tetrimino.palikkakokoelma().palikat())
+            if(palikka.sijainti().y() == pelialue.alue().alkupiste().y())
+                return true;
+        
+        return false;
+    }
+    
+    /** Päivittää tetriminon tiputtamisen ja samalla huolehtii mahdollisesta pelin päättymisestä.
+     */
     private void paivitaTetriminonTiputtaminen()
     {
         if(!asettelija().kokeileSiirtaa(Suunta.ALAS))
         {
-            new PelialueenRakentaja(pelialue).tungePalikat(tetrimino);
-            uusiTetrimino();
+            if(tetriminoOnPelialueenYlaosassa())
+                paataPeli();
+            else
+            {
+                new PelialueenRakentaja(pelialue).tungePalikat(tetrimino);
+                uusiTetrimino();
+            }
         }
         
-        tila.tiputusAjastin().paivita();
+        pelitilanne.tiputusAjastin().paivita();
         paivitaTilanne();
     }
 
+    /** Päivittää pelialueen piirtämisen ja aavetetriminon.
+     */
     private void paivitaTilanne()
     {
+        if(pelialueenPaivittaja.onValmis())
+            aavetetrimino.paivita();
+        
         if(pelitilanteenPiirtaja != null)
             this.pelitilanteenPiirtaja.paivitaTilanne();
+    }
+    
+    /** Päättää pelin.
+     */
+    private void paataPeli()
+    {
+        if(pelialue.lisattyja() > 0)
+        {
+            Ajastin ajastin = new Ajastin();
+            while(true)
+            {
+                Vari vari = ((TetrisPalikka)pelialue.palikat().get(0)).vari();
+                if(vari.peittavyys() <= 20)
+                    break;
+                
+                if(ajastin.onKulunut(1))
+                {
+                    new PelialueenRakentaja(pelialue).himmenna(1);
+                    paivitaTilanne();
+                    ajastin.paivita();
+                }
+            }
+        }
         
-        //paivitaAavetetrimino();
+        pelitilanne.paataPeli();
     }
     
     /** Metodi, jota kutsumalla pelin pelaaminen alkaa.
      */
     public void pelaa()
     {
-        while(peliOnKaynnissa())
-            if(tila.tiputusAjastin().onKulunut(500))
+        while(true)
+        {
+            if(pelitilanne.onTauolla() || !peliOnKaynnissa())
+            {
+                this.pelitilanteenPiirtaja.paivitaTilanne();
+                continue;
+            }
+            
+            if(pelitilanne.tiputusAjastin().onKulunut(500 - pelitilanne.arvo(Pelitilanne.Tunniste.VAIKEUSTASO) * 50 ))
                 paivitaTetriminonTiputtaminen();
+            
+            pelialueenPaivittaja.paivita();
+            if(!pelialueenPaivittaja.onValmis())
+                paivitaTilanne();
+        }
+    }
+    
+    /** Palauttaa pelissä käytetyt asetukset.
+     * @return Pelin Asetukset-olio.
+     */
+    public Asetukset asetukset()
+    {
+        return asetukset;
     }
 }

@@ -12,6 +12,7 @@ import tetris.sovelluslogiikka.sekalaiset.Vari;
  */
 public class TetriminoPalikka extends TetrisPalikka
 {
+    /** Tetrimino, joka omistaa tämän TetriminoPalikan. */
     private Tetrimino tetrimino;
     
     /**

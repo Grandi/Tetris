@@ -1,6 +1,8 @@
 
 package tetris.sovelluslogiikka.tetrimino;
 
+import tetris.sovelluslogiikka.sekalaiset.TetrisPalikka;
+import tetris.sovelluslogiikka.sekalaiset.Vari;
 import tetris.sovelluslogiikka.sekalaiset.Sijainti;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +19,7 @@ public class TetriminonRakentajaTest
     
     @Test public void tetriminojenSatunnaisgenerointiToimii()
     {
-        rakentaja.luoTyypillinenTetrisPalikka(new Sijainti(2, 5));
+        rakentaja.luoTyypillinenTetrisPalikka(new Sijainti(2, 5), 4);
 
         assertTrue( rakentaja.rakennettuTetrimino().palikkakokoelma() instanceof TetriminoPalikkakokoelma );
         assertEquals(4, rakentaja.rakennettuTetrimino().palikkakokoelma().lisattyja());
@@ -51,5 +53,16 @@ public class TetriminonRakentajaTest
                     { false, false, true, false }
                 })
         );
+    }
+    
+    @Test public void tetriminojenVarjaaminenOnnistuu()
+    {
+        Vari vari = new Vari(255, 0, 0, 255);
+        
+        rakentaja.luoTyypillinenTetrisPalikka(new Sijainti(5, 3), 4);
+        rakentaja.varita(vari);
+        Tetrimino tetrimino = rakentaja.rakennettuTetrimino();
+        
+        assertTrue( ((TetrisPalikka)tetrimino.palikkakokoelma().palikat().get(0)).vari().equals(vari) );
     }
 }

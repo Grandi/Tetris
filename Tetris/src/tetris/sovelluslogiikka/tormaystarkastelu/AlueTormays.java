@@ -12,7 +12,10 @@ import tetris.sovelluslogiikka.sekalaiset.Palikka;
  */
 public class AlueTormays implements Tormays
 {
+    /** Palikka, jonka törmäämistä tarkastellaan. */
     private Palikka palikka;
+    
+    /** Alue, johon törmäämistä tarkastellaan. */
     private Alue alue;
     
     /**
@@ -33,6 +36,9 @@ public class AlueTormays implements Tormays
         return paatteleSuunnat();
     }
     
+    /** Päättelee suunnat, joissa törmäykset tapahtuivat.
+     * @return ArrayList, joka sisältää 0-2 suuntaa.
+     */
     private ArrayList<Suunta> paatteleSuunnat()
     {
         ArrayList<Suunta> suunnat = new ArrayList<Suunta>();
@@ -46,6 +52,9 @@ public class AlueTormays implements Tormays
         return suunnat;
     }
     
+    /** Kertoo törmäyksen suunnan vaakasuunnassa.
+     * @return Törmäyksen suunta, tai null, jos törmäystä ei tapahtunut vaakasuunnassa.
+     */
     private Suunta vaakasuunnassa()
     {
         if(palikka.sijainti().x() < alue.alkupiste().x())
@@ -56,6 +65,9 @@ public class AlueTormays implements Tormays
             return null;
     }
     
+    /** Kertoo törmäyksen suunnan pystysuunnassa.
+     * @return Törmäyksen suunta, tai null, jos törmäystä ei tapahtunut pystysuunnassa.
+     */
     private Suunta pystysuunnassa()
     {
         if(palikka.sijainti().y() > alue.paatepiste().y())

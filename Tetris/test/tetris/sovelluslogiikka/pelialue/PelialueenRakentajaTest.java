@@ -1,6 +1,8 @@
 
 package tetris.sovelluslogiikka.pelialue;
 
+import tetris.sovelluslogiikka.sekalaiset.TetrisPalikka;
+import tetris.sovelluslogiikka.sekalaiset.Vari;
 import tetris.sovelluslogiikka.sekalaiset.Palikka;
 import tetris.sovelluslogiikka.tetrimino.Tetrimino;
 import tetris.sovelluslogiikka.sekalaiset.Sijainti;
@@ -12,10 +14,12 @@ import static org.junit.Assert.*;
 public class PelialueenRakentajaTest
 {
     private PelialueenRakentaja rakentaja;
+    private Pelialue pelialue;
 
     @Before public void setUp()
     {
-        rakentaja = new PelialueenRakentaja(new Pelialue(new Sijainti(0, 0), 10, 20));
+        pelialue = new Pelialue(new Sijainti(0, 0), 10, 20);
+        rakentaja = new PelialueenRakentaja(pelialue);
     }
     
     @Test public void tetriminoVoidaanTunkeaPelialueelle()
@@ -36,6 +40,24 @@ public class PelialueenRakentajaTest
         assertEquals(3, pelialue.palikkarivienMaara());
         
         for(int i = 0; i < 3; i++)
-            assertEquals((int)pelialue.alue().leveys(), pelialue.palikoitaRivilla( pelialue.alue().paatepiste().y() - i));
+            assertEquals((int)pelialue.alue().leveys(), pelialue.palikoitaRivilla( i));
+    }
+    
+    @Test public void rakennettuPelialueOnOikea()
+    {
+        assertTrue(pelialue == rakentaja.rakennettuPelialue());
+    }
+    
+    @Test public void pelialueenVoiVarittaa()
+    {
+        Vari vari = new Vari(255, 0, 0, 255);
+        
+        rakentaja.esitaytaRivit(1);
+        rakentaja.varita(vari);
+        
+        TetrisPalikka palikka = (TetrisPalikka)pelialue.palikat().get(0);
+        assertTrue(palikka.vari().equals(vari));
+        
+        rakentaja.varita();
     }
 }

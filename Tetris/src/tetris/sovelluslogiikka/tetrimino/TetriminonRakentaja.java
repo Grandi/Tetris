@@ -3,6 +3,7 @@ package tetris.sovelluslogiikka.tetrimino;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.Random;
 import tetris.sovelluslogiikka.sekalaiset.Palikka;
 import tetris.sovelluslogiikka.sekalaiset.Sijainti;
@@ -14,7 +15,10 @@ import tetris.sovelluslogiikka.sekalaiset.Vari;
  */
 public class TetriminonRakentaja
 {
+    /** Tetrimino, jolle tehdään muutoksia. */
     private Tetrimino tetrimino;
+    
+    /** Satunnaisgeneraattori, joka huolehtii rakentamisen satunnaisuudesta. */
     private Random satunnaisgeneraattori;
     
     /** 
@@ -47,12 +51,10 @@ public class TetriminonRakentaja
     /** Luo neljä palikkaa sisältävän tetriminon.
      * @param sijainti Sijainti, johon tetrimino tahdotaan.
      */
-    public void luoTyypillinenTetrisPalikka(Sijainti sijainti)
+    public void luoTyypillinenTetrisPalikka(Sijainti sijainti, int koko)
     {
-        tungeUusiaSatunnaisiaPalikoita(4);
-        
+        tungeUusiaSatunnaisiaPalikoita(koko);
         tetrimino.asetaSijainniksi(sijainti);
-        varita(new Vari(50, 50, 50, 255));
     }   
     
     /** Antaa kaikille tetriminossa oleville palikoille tietyn värin.
@@ -64,21 +66,44 @@ public class TetriminonRakentaja
             ((TetrisPalikka)palikka).vari().aseta(varivalinta);
     }
     
+    /** Värittää tetriminon palikat sattumanvaraisella värillä.
+     */
+    public void varita()
+    {
+        varita(new Vari(satunnaisgeneraattori));
+    }
+    
+    /** Luo uuden palikan. Tämä on vain tällainen lyhentävä wrapperifunktio.
+     * @param sijainti Sijainti, johon palikka sijoitetaan.
+     * @return Palauttaa tetriminoon kuuluvan TetriminoPalikan.
+     */
     private TetriminoPalikka uusiPalikka(Sijainti sijainti)
     {
         return new TetriminoPalikka(sijainti, tetrimino);
     }
     
+    /** Luo uuden palikan. Tämä on vain tällainen lyhentävä wrapperifunktio. 
+     *
+     * @param x Palikan x-koordinaatti.
+     * @param y Palikan y-koordinaatti.
+     * @return Palauttaa tetriminoon kuuluvan TetriminoPalikan.
+     */
     private TetriminoPalikka uusiPalikka(int x, int y)
     {
         return new TetriminoPalikka(new Sijainti(x, y), tetrimino);
     }    
     
+    /** Tunkee tetriminoon ensimmäisen palikan.
+     */
     private void tungeEnsimmainenPalikka()
     {
         tetrimino.palikkakokoelma().tungePalikka(uusiPalikka(new Sijainti(0, 0)));
     }
-
+    
+    /** Tunkee tetriminoon uuden palikan sattumanvaraiseen paikkaan. Kuitenkin niin,
+     * että tetriminosääntö säilyy (kaikki palikat toistensa vieressä).
+     * @return Palauttaa true, mikäli palikan lisääminen onnistui. Muutoin false.
+     */
     private boolean tungeUusiPalikkaSattumanvaraisesti()
     {
         if(tetrimino.palikkakokoelma().lisattyja() > 0)
@@ -88,6 +113,9 @@ public class TetriminonRakentaja
         return true;
     }
     
+    /** Lisää tetriminoon uuden palikan jonkin aiemmin tungetun palikan viereen.
+     * @return True, jos lisääminen onnistui. False, jos lisääminen ei onnistunut.
+     */
     private boolean tungeUusiPalikkaJonkinEdellisenViereen()
     {
         ArrayList<Palikka> palikat = tetrimino.palikkakokoelma().palikat();
@@ -96,6 +124,10 @@ public class TetriminonRakentaja
         return tungeUusiPalikkaSattumanvaraisesti(((TetriminoPalikka)palikat.get( indeksi )).viereisetSijainnit());
     }
     
+    /** Tunkee tetriminoon uuden palikan sattumanvaraisesti johonkin annetuista sijainneista.
+     * @param sijainnit Sijainnit, joista yhteen palikka tahdotaan asettaa.
+     * @return True, jos palikka saatiin asetettua johonkin annetuista sijainneista. Muutoin false.
+     */
     private boolean tungeUusiPalikkaSattumanvaraisesti(ArrayList<Sijainti> sijainnit)
     {
         Collections.shuffle(sijainnit);
@@ -139,12 +171,19 @@ public class TetriminonRakentaja
      */
     public void rakennaToisenTetriminonPohjalta(Tetrimino toinen)
     {
-        for(Palikka palikka : toinen.palikkakokoelma().palikat())
-        {
-            TetriminoPalikka uusi = new TetriminoPalikka(((TetriminoPalikka)palikka).alkuperainenSijainti(), tetrimino);
-            tetrimino.palikkakokoelma().tungePalikka(uusi);
-        }
+        tetrimino.alusta();
         
+        try {
+            for(Palikka palikka : toinen.palikkakokoelma().palikat())
+            {
+                if(palikka == null)
+                    continue;
+                TetriminoPalikka uusi = new TetriminoPalikka(((TetriminoPalikka)palikka).alkuperainenSijainti(), tetrimino);
+                tetrimino.palikkakokoelma().tungePalikka(uusi);
+            }
+        } catch(ConcurrentModificationException e) {}
+        
+        tetrimino.laitaAsentoon(toinen.asento());
         tetrimino.asetaSijainniksi(toinen.siirtyma());
     }
 }

@@ -20,7 +20,8 @@ public class NappaimistonLukija implements KeyListener
         this.ohjaus = ohjaus;
     }
 
-    /** Välitetään näppäinpainallukset ohjaus-oliolle. 
+    /** Välitetään näppäinpainallukset ohjaus-oliolle.
+     * @param nappain Näppäin, joka oli painettu.
      */
     @Override public void keyPressed(KeyEvent nappain)
     {
@@ -40,6 +41,13 @@ public class NappaimistonLukija implements KeyListener
                 
             case KeyEvent.VK_UP:
                 ohjaus.kaannaTetriminoa(Suunta.OIKEA);
+                break;
+                
+            case KeyEvent.VK_P:
+                if(ohjaus.pelitilanne().onTauolla())
+                    ohjaus.pelitilanne().jatkaPelia();
+                else
+                    ohjaus.pelitilanne().tauota();
                 break;
         }
     }

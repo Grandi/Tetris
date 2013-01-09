@@ -1,25 +1,26 @@
 
 package tetris.kayttoliittyma;
 
+import tetris.sovelluslogiikka.pelimekaniikka.Asetukset;
+
 /** Pelin käyttöliittymä.
  * @author grandi
  */
 public class Kayttoliittyma implements Runnable
 {
-    private Asetusikkuna asetusikkuna;
-    private Peliikkuna peliikkuna;
+    //private Peliikkuna peliikkuna;
+    private Asetukset asetukset;
     private Ohjaus ohjaus;
     
     public Kayttoliittyma()
     {
-        ohjaus = new Ohjaus();
+        asetukset = new Asetukset();
+        ohjaus = new Ohjaus(asetukset);
     }
     
     @Override public void run()
     {
-        /*
-        peliikkuna = new Peliikkuna(ohjaus);
+        new Peliikkuna(ohjaus);
         ohjaus.pelaa();
-        */
     }
 }

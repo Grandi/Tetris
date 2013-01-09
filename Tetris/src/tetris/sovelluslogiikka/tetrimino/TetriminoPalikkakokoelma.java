@@ -2,6 +2,7 @@
 package tetris.sovelluslogiikka.tetrimino;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import tetris.sovelluslogiikka.sekalaiset.Palikka;
 import tetris.sovelluslogiikka.sekalaiset.Palikkakokoelma;
 import tetris.sovelluslogiikka.sekalaiset.Sijainti;
@@ -12,8 +13,15 @@ import tetris.sovelluslogiikka.sekalaiset.Sijainti;
  */
 public class TetriminoPalikkakokoelma implements Palikkakokoelma
 {
+    /** ArrayList, joka sisältää palikkakokoelmassa olevat palikat.
+     * Taataan olevan TetriminoPalikka-luokan jäseniä. */
     private ArrayList<Palikka> palikat;
+    
+    /** Tetrimino, joka omistaa tämän palikkakokoelman ja nämä palikat. */
     private Tetrimino tetrimino;
+    
+    /** Sijoitettujen palikoiden alkuperäisten sijaintien summa. Tämän perusteella voidaan
+     *  laskea palikoille keskiarvo, jonka perusteella taas voi laskea suhteellisia sijainteja. */
     private Sijainti summa;
     
     /**
@@ -36,12 +44,23 @@ public class TetriminoPalikkakokoelma implements Palikkakokoelma
         this.summa = kopioitava.summa;
     }
 
+    /** Kertoo, onko sijainti toisen vieressä.
+     * 
+     * @param a Ensimmäinen vertailtava sijainti.
+     * @param b Toinen vertailtava sijainti;
+     * @return True, jos sijainnit ovat vierekkäin. Muutoin false.
+     */
     private boolean onVieressa(Sijainti a, Sijainti b)
     {
         return (a.x() == b.x() && Math.abs(a.y() - b.y()) == 1) ||
                (a.y() == b.y() && Math.abs(a.x() - b.x()) == 1);
     }
     
+    /** Kertoo, olisiko sijainti jonkin kokoelmassa olevan palikan vieressä.
+     * 
+     * @param sijainti Sijainti, josta tahdotaan tietää sen vieruus kokoelman palikoihin.
+     * @return True, mikäli edes jokin vieressä oleva palikka löytyy. Muutoin false.
+     */
     private boolean onJonkinMuunPalikanVieressa(Sijainti sijainti)
     {
         if(palikat.isEmpty())
@@ -54,6 +73,10 @@ public class TetriminoPalikkakokoelma implements Palikkakokoelma
         return false;
     }
 
+    /** Kertoo, sisältääkö kokoelma palikan tässä sijainnissa.
+     * @param sijainti Sijainti, josta palikan löytyminen tahdotaan selvittää.
+     * @return True, mikäli sijainnissa ei ole tämän kokoelman palikkaa. Muutoin false.
+     */
     private boolean eiSisallaPalikkaa(Sijainti sijainti)
     {
         return haePalikka(sijainti) == null;
@@ -69,26 +92,32 @@ public class TetriminoPalikkakokoelma implements Palikkakokoelma
                onJonkinMuunPalikanVieressa(sijainti);
     }
 
+    /** Lisää palikkakokoelmaan uuden TetriminoPalikka-olion.
+     * @param palikka Lisättävä TetriminoPalikka.
+     */
     private void lisaaPalikka(TetriminoPalikka palikka)
     {
         palikat.add(palikka);
-        paivitaKeskipiste(palikka.alkuperainenSijainti());
+        paivitaSumma(palikka.alkuperainenSijainti());
     }
-    
-    private TetriminoPalikka luoTetriminoPalikka(Palikka palikka)
-    {
-        return new TetriminoPalikka(palikka, tetrimino);
-    }
-    
-    private void paivitaKeskipiste(Sijainti sijainti)
+
+    /** Päivittää sijoitettujen palikoiden alkuperäisten sijaintien summan.
+     * @param sijainti Sijainti, joka tahdotaan laskea mukaan summaan. 
+     */
+    private void paivitaSumma(Sijainti sijainti)
     {
         summa.aseta(summa.x() + sijainti.x(), summa.y() + sijainti.y());
     }
     
+    /** Varmistaa, että Palikka-olio on TetriminoPalikka-olio, ja sen omistaja on sama tetrimino.
+     * Mikäli näin ei ole, uusi TetriminoPalikka-olio luodaan.
+     * @param palikka TetriminoPalikka, joka vastaa annettua palikka-oliota.
+     * @return Palauttaa annettua Palikka-oliota vastaavan TetriminoPalikka-olion.
+     */
     private TetriminoPalikka varmistaTetriminoPalikkaus(Palikka palikka)
     {
         if(!(palikka instanceof TetriminoPalikka) || ((TetriminoPalikka)palikka).omistajaTetrimino() != tetrimino)
-            return luoTetriminoPalikka(palikka);
+            return new TetriminoPalikka(palikka, tetrimino);
         
         return (TetriminoPalikka)palikka;
     }
@@ -106,9 +135,11 @@ public class TetriminoPalikkakokoelma implements Palikkakokoelma
 
     @Override public Palikka haePalikka(Sijainti sijainti)
     {
-        for(Palikka palikka : palikat)
-            if(((TetriminoPalikka)palikka).sijainti().equals(sijainti))
-                return palikka;
+        try {
+            for(Palikka palikka : palikat)
+                if(((TetriminoPalikka)palikka).sijainti().equals(sijainti))
+                    return palikka;
+        } catch(ConcurrentModificationException e) {}
         
         return null;
     }
@@ -123,7 +154,7 @@ public class TetriminoPalikkakokoelma implements Palikkakokoelma
      */
     public Sijainti suhteellinenKeskipiste()
     {
-        if(lisattyja() == 0)
+        if(palikat.isEmpty())
             return new Sijainti(0, 0);
         else
             return new Sijainti(summa.x() / lisattyja(), summa.y() / lisattyja());
@@ -140,14 +171,19 @@ public class TetriminoPalikkakokoelma implements Palikkakokoelma
         summa = new Sijainti(0, 0);
     }
     
-    private void uudelleenlaskeKeskipiste()
+    /** Laskee uudelleen sijoitettujen palikoiden sijaintien summan.
+     */
+    private void uudelleenlaskeSumma()
     {
         summa = new Sijainti(0, 0);
         
         for(Palikka palikka : palikat)
-            paivitaKeskipiste(palikka.sijainti());
+            paivitaSumma(palikka.sijainti());
     }
     
+    /** Kertoo, toteuttavatko nykyiset palikat tetriminosäännön. Eli ovat toistensa vieressä.
+     * @return True, jos palikat toteuttavat tetriminosäännön. Muutoin false.
+     */
     private boolean toteuttaaTetriminosaannon()
     {
         for(Palikka palikka : palikat)
@@ -157,6 +193,10 @@ public class TetriminoPalikkakokoelma implements Palikkakokoelma
         return true;
     }
     
+    /** Poistaa kokoelman palikan annetusta sijainnista.
+     * @param sijainti Sijainti, josta palikka tahdotaan poistaa.
+     * @return Poistettu palikka, tai jos palikkaa ei ole olemassa, null.
+     */
     private Palikka poista(Sijainti sijainti)
     {
         for(int i = 0; i < palikat.size(); i++)
@@ -182,7 +222,7 @@ public class TetriminoPalikkakokoelma implements Palikkakokoelma
             return false;
         }
         
-        uudelleenlaskeKeskipiste();
+        uudelleenlaskeSumma();
         return true;
     }
 }

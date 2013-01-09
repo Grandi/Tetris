@@ -11,7 +11,10 @@ import tetris.sovelluslogiikka.sekalaiset.Sijainti;
  */
 public class PalikoidenValinenTormays implements Tormays
 {
+    /** Palikat, joiden välistä törmäystä tarkastellaan. */
     private Palikka palikat[];
+    
+    /** Piste, johon törmäyksen sijaintia verrataan suunnan selvittämiseksi. */
     private Sijainti vertailupiste;
     
     /**

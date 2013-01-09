@@ -7,6 +7,7 @@ import tetris.sovelluslogiikka.sekalaiset.Palikka;
 import tetris.sovelluslogiikka.sekalaiset.Palikkakokoelma;
 import tetris.sovelluslogiikka.sekalaiset.Sijainti;
 import tetris.sovelluslogiikka.sekalaiset.TetrisPalikka;
+import tetris.sovelluslogiikka.sekalaiset.Vari;
 import tetris.sovelluslogiikka.tetrimino.Tetrimino;
 
 /** Rakentaa pelialuetta. Kokoaa yhteen joitain pelialueen manipuloimiseen tarvittavia toimintoja.
@@ -14,7 +15,10 @@ import tetris.sovelluslogiikka.tetrimino.Tetrimino;
  */
 public class PelialueenRakentaja
 {
+    /** Pelialue, jolle muutoksia suoritetaan. */
     private Pelialue pelialue;
+    
+    /** Satunnaisgeneraattori, joka hoitaa rakentamisen satunnaisuudesta. */
     private Random satunnaisgeneraattori;
     
     /**
@@ -32,8 +36,7 @@ public class PelialueenRakentaja
      */
     public PelialueenRakentaja(Pelialue pelialue)
     {
-        this.pelialue = pelialue;
-        this.satunnaisgeneraattori = new Random();
+        this(pelialue, new Random());
     }    
     
     /** Tunkee pelialueelle annetut palikat.
@@ -60,8 +63,45 @@ public class PelialueenRakentaja
         return tungePalikat(tetrimino.palikkakokoelma());
     }
     
-    private void esitaytaRivi(int rivinumero, int tyhjaksiJatettava)
+    /** Värittää pelialueen palikat käyttäjän valitsemalla värillä.
+     * @param varivalinta Väri, jolla palikat tahdotaan värjätä.
+     */
+    public void varita(Vari varivalinta)
     {
+        for(Palikka palikka : pelialue.palikat())
+            ((TetrisPalikka)palikka).vari().aseta(varivalinta);
+    }
+    
+    /** Himmentää pelialueen palikoita, eli vähentää niiden peittävyyttä. 
+     * @param maara Kuinka paljon palikoita tahdotaan himmentää.
+     */
+    public void himmenna(int maara)
+    {
+        for(Palikka palikka : pelialue.palikat())
+            ((TetrisPalikka)palikka).vari().asetaPeittavyys( (int)( ((TetrisPalikka)palikka).vari().peittavyys() - maara ) );
+    }
+    
+    /** Värittää pelialueen palikat sattumanvaraisella värillä.
+     */
+    public void varita()
+    {
+        for(Palikka palikka : pelialue.palikat())
+            ((TetrisPalikka)palikka).vari().aseta(new Vari(new Random()));
+    }
+    
+    /** Esitäyttää halutun rivin. Jättää yhden sattumanvaraisen palikan vajaaksi.
+     * @param rivinumero Rivi, joka tahdotaan täyttää.
+     * @param eiSaaJaadaTyhjaksi Kohta riviltä, jota ei saa jättää tyhjäksi.
+     * @return Se palikka, joka jätettiin tyhjäksi halutulla rivillä.
+     */
+    private int esitaytaRivi(int rivinumero, int eiSaaJaadaTyhjaksi)
+    {
+        int tyhjaksiJatettava = -1;
+        
+        do
+            tyhjaksiJatettava = satunnaisgeneraattori.nextInt((int)pelialue.alue().leveys()) + (int)pelialue.alue().alkupiste().x();
+        while(tyhjaksiJatettava == eiSaaJaadaTyhjaksi);
+        
         for(float x = pelialue.alue().alkupiste().x(); x <= pelialue.alue().paatepiste().x(); x++)
         {
             Sijainti nykyinen = new Sijainti(x, pelialue.alue().paatepiste().y() - rivinumero );
@@ -72,14 +112,7 @@ public class PelialueenRakentaja
                 pelialue.poistaPalikka(nykyinen);
         }
         
-        float QQQQQQ = pelialue.alue().paatepiste().x() - pelialue.alue().alkupiste().x();
-        float b = 0;
-    }
-    
-    private void esitaytaRivi(int rivinumero)
-    {
-        int tyhjaksiJatettava = satunnaisgeneraattori.nextInt((int)pelialue.alue().leveys()) + (int)pelialue.alue().alkupiste().x();
-        esitaytaRivi(rivinumero, tyhjaksiJatettava);
+        return tyhjaksiJatettava;
     }
     
     /** Esitäyttää pelialuetta valmiilla, yhdellä palikalla vajailla palikkariveillä.
@@ -87,8 +120,11 @@ public class PelialueenRakentaja
      */
     public void esitaytaRivit(int rivimaara)
     {
+        int edellinenTyhjaksiJatetty = -1;
         for(int i = 0; i < rivimaara; i++)
-            esitaytaRivi(i);
+        {
+            edellinenTyhjaksiJatetty = esitaytaRivi(i, edellinenTyhjaksiJatetty);
+        }
     }
     
     /** Palauttaa sen pelialueen, jolle tämä luokka teki muutoksia.

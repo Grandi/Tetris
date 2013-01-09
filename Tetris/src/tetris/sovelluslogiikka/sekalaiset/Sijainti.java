@@ -6,6 +6,7 @@ package tetris.sovelluslogiikka.sekalaiset;
  */
 public class Sijainti
 {
+    /** Sijainnin koordinaatti. */
     protected float x, y;
     
     /** Asettaa pisteen sijainnin.

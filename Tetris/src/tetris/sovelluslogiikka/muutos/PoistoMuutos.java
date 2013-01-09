@@ -10,8 +10,13 @@ import tetris.sovelluslogiikka.sekalaiset.TetrisPalikka;
  */
 public class PoistoMuutos extends Muutos
 {
+    /** Palikka, joka poistetaan. */
     private TetrisPalikka palikka;
+    
+    /** Pelialue, jolta palikka poistetaan. */
     private Pelialue pelialue;
+    
+    /** Määrittää onko poistaminen valmistunut. */
     private boolean valmis;
 
     /**
@@ -36,7 +41,7 @@ public class PoistoMuutos extends Muutos
             valmis = true;
         }
         else
-            palikka.vari().asetaPeittavyys( palikka.vari().peittavyys() / 2 );
+            palikka.vari().asetaPeittavyys( (int)((float)palikka.vari().peittavyys() / 1.2) );
     }
 
     @Override public boolean onValmis()

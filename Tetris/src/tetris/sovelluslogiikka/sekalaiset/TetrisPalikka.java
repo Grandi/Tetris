@@ -6,7 +6,10 @@ package tetris.sovelluslogiikka.sekalaiset;
  */
 public class TetrisPalikka implements Palikka
 {
+    /** TetrisPalikan sijainti. */
     protected Sijainti sijainti;
+    
+    /** TetrisPalikan väri. */
     protected Vari vari;
     
     /**
@@ -38,9 +41,9 @@ public class TetrisPalikka implements Palikka
     /** Kopioi palikan sijiannin.
      * @param palikka Palikka, josta sijainti kopioidaan.
      */
-    public TetrisPalikka(Palikka palikka)
+    public TetrisPalikka(TetrisPalikka palikka)
     {
-        this(palikka.sijainti());
+        this(palikka.sijainti(), palikka.vari());
     }
     
     /** Palauttaa Tetris-palikan värin.

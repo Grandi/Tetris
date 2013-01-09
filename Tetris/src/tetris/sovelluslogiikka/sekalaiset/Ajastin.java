@@ -6,6 +6,7 @@ package tetris.sovelluslogiikka.sekalaiset;
  */
 public class Ajastin
 {
+    /** Ajanhetki, jolloin ajastin viimeeksi päivitettiin paivita()-metodilla. */
     private long aloitus;
     
     /** Päivittää ajastimen tällä hetkellä olevaan aikaan.

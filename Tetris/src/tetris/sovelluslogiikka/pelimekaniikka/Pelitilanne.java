@@ -7,25 +7,36 @@ import tetris.sovelluslogiikka.sekalaiset.Ajastin;
 /** Kokoelma erilaisia pelin tilaan liittyviä muuttujia.
  * @author grandi
  */
-public class PelinTila
+public class Pelitilanne
 {
     /** Tunnisteet muuttujille, jotka vaikuttavat pelin tilaan.
      */
     public static enum Tunniste
     {
-        PISTEET
+        PISTEET, VAIKEUSTASO, RIVIT
     }
     
+    /** Hajautustaulu, joka sisältää erilaisia pelin kannalta oleellisia kokonaislukuja. */
     private HashMap<Tunniste, Integer> arvot;
+    
+    /** Määrittää, onko peli päättynyt. */
     private boolean peliOhi;
-    private Ajastin nappainAjastin, tiputusAjastin;
+    
+    /** Määrittää, onko peli tauotettu. */
+    private boolean tauotettu;
+    
+    /** Ajastaa näppäinten rekisteröitymisviiveen. */
+    private Ajastin nappainAjastin;
+    
+    /** Ajastaa tetriminon tippumisnopeuden. */
+    private Ajastin tiputusAjastin;
+    
     
     /** Alustaa muuttujat.
      */
-    public PelinTila()
+    public Pelitilanne()
     {
         arvot = new HashMap<Tunniste, Integer>();
-        arvot.put(Tunniste.PISTEET, 0);
         
         this.peliOhi = false;
         
@@ -33,11 +44,46 @@ public class PelinTila
         this.tiputusAjastin = new Ajastin();
     }
     
-    /** Asettaa pelin päättyneeksi.
+    /** Asettaa pelitilanteeksi alkutilanteen.
      */
+    public void alusta()
+    {
+        arvot.clear();
+        peliOhi = false;
+        tauotettu = false;
+        
+        nappainAjastin.paivita();
+        tiputusAjastin.paivita();
+    }
+    
+    /* Asettaa pelin aloitetuksi. */
+    public void aloitaPeli()
+    {
+        peliOhi = false;
+    }
+    
+    /** Asettaa pelin päättyneeksi. */
     public void paataPeli()
     {
         peliOhi = true;
+    }
+    
+    /** Asettaa pelin tauotetuksi. */
+    public void tauota()
+    {
+        tauotettu = true;
+    }
+    
+    /** Kertoo, onko peli tauolla. */
+    public boolean onTauolla()
+    {
+        return tauotettu;
+    }
+    
+    /** Jatkaa peliä. */
+    public void jatkaPelia()
+    {
+        tauotettu = false;
     }
     
     /** Kertoo, onko peli päättynyt.
@@ -59,8 +105,7 @@ public class PelinTila
     
     /** Palauttaa tunnisteen (esimerkiksi pisteet)
      * @param tunniste Tunniste, jonka arvo tahdotaan tietää.
-     * @return Tunnisteen arvo. Nolla, jos tunnisteelle ei ole vielä astettu
-     * arvoa, mutta moista tapausta ei pitäisi olla mahdollista tulla.
+     * @return Tunnisteen arvo. Nolla, jos tunnisteelle ei ole vielä astettu arvoa.
      */
     public int arvo(Tunniste tunniste)
     {
@@ -91,6 +136,6 @@ public class PelinTila
      */
     public boolean voiLiikuttaa()
     {
-        return nappainAjastin.onKulunut(25) && !peliOhi;
+        return nappainAjastin.onKulunut(25) && !peliOhi && !tauotettu;
     }
 }
