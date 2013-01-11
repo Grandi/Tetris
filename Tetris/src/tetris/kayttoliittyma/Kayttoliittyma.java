@@ -6,21 +6,19 @@ import tetris.sovelluslogiikka.pelimekaniikka.Asetukset;
 /** Pelin käyttöliittymä.
  * @author grandi
  */
-public class Kayttoliittyma implements Runnable
+public class Kayttoliittyma
 {
-    //private Peliikkuna peliikkuna;
-    private Asetukset asetukset;
-    private Ohjaus ohjaus;
-    
     public Kayttoliittyma()
     {
-        asetukset = new Asetukset();
-        ohjaus = new Ohjaus(asetukset);
-    }
-    
-    @Override public void run()
-    {
-        new Peliikkuna(ohjaus);
-        ohjaus.pelaa();
+        Asetukset asetukset = new Asetukset();
+
+        Asetusikkuna asetusikkuna = new Asetusikkuna(asetukset);
+        
+        while(asetusikkuna.isVisible())
+            System.out.print("");
+        
+        Ohjaus ohjaus = new Ohjaus(asetukset);
+        new Peliikkuna(ohjaus, asetusikkuna);
+        ohjaus.run();
     }
 }

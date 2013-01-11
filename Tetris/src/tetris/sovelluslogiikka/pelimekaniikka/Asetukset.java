@@ -1,45 +1,51 @@
 
 package tetris.sovelluslogiikka.pelimekaniikka;
 
+import tetris.sovelluslogiikka.sekalaiset.Vari;
+
 /** Pitää sisällään joukon pelin asetuksia.
  * @author grandi
  */
 public class Asetukset
 {
-    /** Määrittää käytetäänkö ohjelmassa värejä. */
-    private boolean kaytaVareja;
-    
-    /** Määrittää näytetäänkö tetriminon putoamiskohta (eli "aavetetrimino"). */
-    private boolean naytaTetriminonPutoamiskohta;
-    
     /** Määrittää esitäytettävien palikkarivien määrän. */
     private int esitaytettavat;
     
     /** Määrittää tetriminossa olevien palikoiden määrän. */
     private int palikoidenMaara;
     
-    /** Alustaa oletusasetukset.
+    /** Käytössä olevan väripaletin värit. */
+    private Vari[] varipaletti;
+    
+    /** Määrittää mikä vaikeustaso pelin alussa on. */
+    private int aloitusvaikeustaso;
+    
+    /**
+     * Alustaa oletusasetukset.
      */
     public Asetukset()
     {
-        kaytaVareja = true;
-        esitaytettavat = 0;
-        naytaTetriminonPutoamiskohta = true;
-        palikoidenMaara = 4;
+        alustaOletusasetukset();
     }
     
-    /** Kertoo, käytetäänkö pelissä värejä. */
-    public boolean kayttaaVareja()
+    /**
+     * Alustaa oletusasetukset.
+     */
+    final public void alustaOletusasetukset()
     {
-        return kaytaVareja;
+        esitaytettavat = 0;
+        aloitusvaikeustaso = 4;
+        palikoidenMaara = 4;
+        
+        varipaletti = new Vari[]
+        {
+            new Vari(255, 38, 0, 255),
+            new Vari(0, 38, 255, 255),
+            new Vari(38, 127, 0, 255),
+            new Vari(178, 0, 255, 255)
+        };
     }
         
-    /** Kertoo, näytetäänkö tetriminon putoamiskohta. */
-    public boolean nayttaaTetriminonPutoamiskohdan()
-    {
-        return naytaTetriminonPutoamiskohta;
-    }
-    
     /** Kertoo kuinka monta esitäytettyä riviä luodaan pelin alussa. */
     public int esitaytettavatRivit()
     {
@@ -52,28 +58,12 @@ public class Asetukset
         return palikoidenMaara;
     }
     
-    /** Asettaa sen, käytetäänkö pelissä värejä.
-     * @param jokoTai Jos true, käytetään. Jos false, ei käytetä.
-     */
-    public void kaytaVareja(boolean jokoTai)
-    {
-        kaytaVareja = jokoTai;
-    }
-    
-    /** Asettaa sen, näytetäänkö tetriminon putoamiskohta eli "aavetetrimino".
-     * @param jokoTai Jos True, näytetään. Jos false, ei näytetä.
-     */
-    public void naytaPutoamiskohta(boolean jokoTai)
-    {
-        naytaTetriminonPutoamiskohta = jokoTai;
-    }
-    
     /** Asettaa kuinka monta esitäytettävää riviä luodaan pelin alkaessa.
      * @param rivimaara Haluttu rivimäärä. Jos ei ole väliltä 0-7, arvoa ei hyväksytä.
      */
     public void asetaEsitaytettavatRivit(int rivimaara)
     {
-        if(rivimaara >= 0 && rivimaara <= 7)
+        if(rivimaara >= 0 && rivimaara <= 12)
             esitaytettavat = rivimaara;
     }
     
@@ -84,5 +74,37 @@ public class Asetukset
     {
         if(palikkamaara >= 3 && palikkamaara <= 6)
             palikoidenMaara = palikkamaara;
+    }
+    
+    /** Asettaa nykyisen väripaletin.
+     * @param paletti Uusi paletti, joka tahdotaan käyttöönottaa.
+     */
+    public void asetaVaripaletti(Vari[] paletti)
+    {
+        this.varipaletti = paletti;
+    }
+    
+    /** Palauttaa nykyisen väripaletin.
+     * @return Väripaletti, joka on tällä hetkellä käytössä.
+     */
+    public Vari[] varipaletti()
+    {
+        return varipaletti;
+    }
+    
+    /** Asettaa pelin aloitusvaikeustason.
+     * @param vaikeustaso Vaikeustaso, jolla tahdotaan aloittaa. Voi olla negatiivinen.
+     */
+    public void asetaAloitusvaikeustaso(int vaikeustaso)
+    {
+        aloitusvaikeustaso = vaikeustaso;
+    }
+    
+    /** Kertoo pelin aloitusvaikeustason.
+     * @return Vaikeustaso, jolta peli alkaa.
+     */
+    public int aloitusvaikeustaso()
+    {
+        return aloitusvaikeustaso;
     }
 }

@@ -1,6 +1,8 @@
 
 package tetris.sovelluslogiikka.pelimekaniikka;
 
+import java.util.Arrays;
+import tetris.sovelluslogiikka.sekalaiset.Vari;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -16,12 +18,26 @@ public class AsetuksetTest
         asetukset = new Asetukset();
     }
     
-    @Test public void ovatAluksiOletusasetuksissaan()
+    private void kokeileEttaOvatOletusasetuksissaan()
     {
         assertEquals(4, asetukset.palikoidenMaaraTetriminossa());
         assertEquals(0, asetukset.esitaytettavatRivit());
-        assertTrue( asetukset.kayttaaVareja() );
-        assertTrue( asetukset.nayttaaTetriminonPutoamiskohdan() );
+        assertEquals(4, asetukset.aloitusvaikeustaso());
+    }
+    
+    @Test public void ovatAluksiOletusasetuksissaan()
+    {
+        kokeileEttaOvatOletusasetuksissaan();
+        asetukset.asetaEsitaytettavatRivit(3);
+        
+        asetukset.alustaOletusasetukset();
+        kokeileEttaOvatOletusasetuksissaan();
+    }
+    
+    @Test public void asetuksetVoiNollata()
+    {
+        asetukset.asetaPalikoidenMaaraTetriminossa(5);
+        
     }
     
     @Test public void voiAsettaaPalikoidenMaaran()
@@ -50,19 +66,25 @@ public class AsetuksetTest
         asetukset.asetaEsitaytettavatRivit(-1);
         assertEquals(0, asetukset.esitaytettavatRivit());
         
-        asetukset.asetaEsitaytettavatRivit(8);
+        asetukset.asetaEsitaytettavatRivit(13);
         assertEquals(0, asetukset.esitaytettavatRivit());
     }
     
-    @Test public void antaaAsettaaNaytetaankoPalikanPutoamiskohta()
+    @Test public void voiAsettaaVaripaletin()
     {
-        asetukset.naytaPutoamiskohta(false);
-        assertFalse(asetukset.nayttaaTetriminonPutoamiskohdan());
+        Vari[] varipaletti = new Vari[]
+        {
+            new Vari(1, 3, 3, 7),
+            new Vari(71, 5, 5, 17),
+        };
+        
+        asetukset.asetaVaripaletti(varipaletti);
+        assertTrue(Arrays.equals(varipaletti, asetukset.varipaletti()));
     }
     
-    @Test public void antaaAsettaaKaytetaankoVareja()
+    @Test public void voiAsettaaAloitusvaikeustason()
     {
-        asetukset.kaytaVareja(false);
-        assertFalse( asetukset.kayttaaVareja() );
+        asetukset.asetaAloitusvaikeustaso(-8);
+        assertEquals(-8, asetukset.aloitusvaikeustaso());
     }
 }

@@ -128,7 +128,7 @@ public class Pelialue implements Palikkakokoelma
      */
     public int palikoitaRivilla(float rivinumero)
     {
-        return !lisattyja.containsKey(rivinumero) ? 0 : lisattyja.get(rivinumero);
+        return lisattyja != null && !lisattyja.containsKey(rivinumero) ? 0 : lisattyja.get(rivinumero);
     }
     
     /** Kertoo onko rivi täysi.
@@ -137,6 +137,6 @@ public class Pelialue implements Palikkakokoelma
      */
     public boolean riviOnTaysi(float rivinumero)
     {
-        return lisattyja.containsKey(rivinumero) && lisattyja.get(rivinumero) > alue.leveys();
+        return lisattyja != null && lisattyja.containsKey(rivinumero) && lisattyja.get(rivinumero) > alue.leveys();
     }
 }

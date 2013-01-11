@@ -17,6 +17,7 @@ import javax.swing.JSlider;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import tetris.sovelluslogiikka.pelimekaniikka.Asetukset;
+import tetris.sovelluslogiikka.sekalaiset.Vari;
 
 /** Luo asetusikkunan, joka tarjoaa asetusten muuttamista. Erittäin keskeneräinen.
  * @author grandi
@@ -24,10 +25,11 @@ import tetris.sovelluslogiikka.pelimekaniikka.Asetukset;
 public class Asetusikkuna extends JFrame implements ActionListener
 {
     private JSlider esitaytettavienSaataja;
-    private JComboBox palikoidenMaaranSaataja;
-    private JCheckBox aaveTetrimino, varienKaytto, sivupalkinNaytto;
+    private JComboBox varipaletinValitsija, vaikeustasonValitsija;
+    private JCheckBox viisipalikkaisenValitsija;
     private JButton painike;
     
+    /** Asetukset, jotka säädetään. */
     private Asetukset asetukset;
     
     public Asetusikkuna(Asetukset asetukset)
@@ -40,11 +42,13 @@ public class Asetusikkuna extends JFrame implements ActionListener
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
-        //setSize(480, 260);
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        setLocationRelativeTo(null);
     }
     
+    /** Lisää ikkunaan asetuskomponentit.
+     */
     private void lisaaKomponentit()
     {
         setLayout(new GridBagLayout());
@@ -58,6 +62,8 @@ public class Asetusikkuna extends JFrame implements ActionListener
         add( Box.createHorizontalStrut(20) );
     }
     
+    /** Lisää ikkunaan paneelin, johon lomakkeet tungetaan.
+     */
     private void lisaaLomakkeetSisaltavaPaneeli()
     {
         JPanel paneeli = new JPanel();
@@ -66,27 +72,36 @@ public class Asetusikkuna extends JFrame implements ActionListener
         paneeli.setLayout(new GridLayout(0,2));
 
         lisaaEsitaytettavienRivienKyselija(paneeli);
-        lisaaPutoamiskohdanNayttamisenKyselija(paneeli);
-        lisaaVarienKaytonKyselija(paneeli);
-        //lisaaSivupalkinNaytonKyselija(paneeli);
+        lisaaVaikeustasonKyselija(paneeli);
+        lisaaVaripaletinKyselija(paneeli);
         lisaaPalikoidenMaaranKyselija(paneeli);
         
         add(paneeli);
     }
     
+    /** Lisää checkboxin, jolla säädetään, tahdotaanko tetriminoista 5-palikkaisia.
+     * @param paneeli Paneeli, johon lisätään.
+     */
     private void lisaaPalikoidenMaaranKyselija(JPanel paneeli)
     {
-        palikoidenMaaranSaataja = new JComboBox(new String[] { "4", "5" });
+        viisipalikkaisenValitsija = new JCheckBox();
+        viisipalikkaisenValitsija.setSelected(asetukset.palikoidenMaaraTetriminossa() == 5);
         
-        paneeli.add(new JLabel(" Tetriminojen koko:     "));
-        paneeli.add(palikoidenMaaranSaataja);
+        paneeli.add(new JLabel(" Viisipalikkaiset tetriminot:     "));
+        paneeli.add(viisipalikkaisenValitsija);
     }
     
+    /** Lisää JSliderin, jolla säädetään, kuinka monta riviä esitäytetään.
+     * @param paneeli Paneeli, johon lisätään. 
+     */
     private void lisaaEsitaytettavienRivienKyselija(JPanel paneeli)
     {
-        esitaytettavienSaataja = new JSlider(JSlider.HORIZONTAL, 0, 7, 0);
+        esitaytettavienSaataja = new JSlider(JSlider.HORIZONTAL, 0, 12, 0);
         
-        esitaytettavienSaataja.setMajorTickSpacing(10);
+        esitaytettavienSaataja.setMajorTickSpacing(4);
+        esitaytettavienSaataja.setMinorTickSpacing(1);
+        esitaytettavienSaataja.setSnapToTicks(true);
+        
         esitaytettavienSaataja.setPaintTicks(true);
         esitaytettavienSaataja.setValue(asetukset.esitaytettavatRivit());
         
@@ -94,33 +109,84 @@ public class Asetusikkuna extends JFrame implements ActionListener
         paneeli.add(esitaytettavienSaataja);
     }
     
-    private void lisaaPutoamiskohdanNayttamisenKyselija(JPanel paneeli)
+    /** Lisää comboboxin, jolla säädetään aloitusvaikeustasoa.
+     * @param paneeli Paneeli, johon lisätään.
+     */
+    private void lisaaVaikeustasonKyselija(JPanel paneeli)
     {
-        paneeli.add(new JLabel(" Näytä putoamiskohta:  "));
-        aaveTetrimino = new JCheckBox();
-        aaveTetrimino.setSelected(asetukset.nayttaaTetriminonPutoamiskohdan());
-        paneeli.add(aaveTetrimino);
+        vaikeustasonValitsija = new JComboBox(new String[] { "Aloittelija", "Keskiverto", "Mestari" });
+        vaikeustasonValitsija.setSelectedIndex(1);
+        
+        paneeli.add(new JLabel(" Pelin aloitusvaikeustaso:  "));
+        paneeli.add(vaikeustasonValitsija);
     }
     
-    private void lisaaVarienKaytonKyselija(JPanel paneeli)
+    /** Lisää comboboxin, jolla säädetään mitä väripalettia käytetään.
+     * @param paneeli Paneeli, johon lisätään.
+     */
+    private void lisaaVaripaletinKyselija(JPanel paneeli)
     {
-        paneeli.add(new JLabel(" Käytä värejä:  "));
-        varienKaytto = new JCheckBox();
-        varienKaytto.setSelected(asetukset.kayttaaVareja());
-        paneeli.add(varienKaytto);
+        this.varipaletinValitsija = new JComboBox(new String[] { "Värikäs", "Mustavalkoinen", "Vaaleanpunainen" });
+         
+        paneeli.add(new JLabel(" Palikoiden väripaletti:     "));
+        paneeli.add(varipaletinValitsija);
     }
 
+    /** Kun on OK-painiketta painettu:
+     */
     @Override public void actionPerformed(ActionEvent ae)
     {
-        asetukset.kaytaVareja( varienKaytto.isSelected() );
-        asetukset.naytaPutoamiskohta( aaveTetrimino.isSelected() );
-//        asetukset.naytaSivupalkki( sivupalkinNaytto.isSelected() );
+        asetaVaripalettiValinnanPerusteella();
+        asetaAloitusvaikeustasoValinnanPerusteella();
         
         asetukset.asetaEsitaytettavatRivit( esitaytettavienSaataja.getValue() );
-        
-        String palikat = (String)palikoidenMaaranSaataja.getSelectedItem();
-        asetukset.asetaPalikoidenMaaraTetriminossa( Integer.parseInt(palikat) );
+        asetukset.asetaPalikoidenMaaraTetriminossa( viisipalikkaisenValitsija.isSelected() ? 5 : 4 );
 
         setVisible(false);
+    }
+    
+    /** Asettaa asetuksiin äsken säädetyn aloitusvaikeustason.
+     */
+    private void asetaAloitusvaikeustasoValinnanPerusteella()
+    {
+        String valinta = ((String)vaikeustasonValitsija.getSelectedItem());
+        
+        if(valinta.equals("Aloittelija"))
+            asetukset.asetaAloitusvaikeustaso(0);
+        else if(valinta.equals("Keskiverto"))
+            asetukset.asetaAloitusvaikeustaso(4);
+        else
+            asetukset.asetaAloitusvaikeustaso(8);
+    }
+    
+    /** Asettaa pelin väripaletin siksi miksi se valittiin.
+     */
+    private void asetaVaripalettiValinnanPerusteella()
+    {
+        Vari[] paletti = null;
+        
+        String valinta = ((String)varipaletinValitsija.getSelectedItem());
+        if(valinta.equals("Mustavalkoinen"))
+            paletti = new Vari[] { new Vari(50, 50, 50, 255) };
+        else if(valinta.equals("Vaaleanpunainen"))
+            paletti = new Vari[] { new Vari(255, 96, 176, 255) };
+        else
+            paletti = new Vari[]
+            {
+                new Vari(255, 38, 0, 255),
+                new Vari(0, 38, 255, 255),
+                new Vari(38, 127, 0, 255),
+                new Vari(178, 0, 255, 255)
+            };
+        
+        asetukset.asetaVaripaletti(paletti);
+    }
+    
+    /** Palauttaa asetukset, joita säädetään/ollaan säädetty.
+     * @return Säädettävänä olleet asetukset.
+     */
+    public Asetukset asetukset()
+    {
+        return asetukset;
     }
 }

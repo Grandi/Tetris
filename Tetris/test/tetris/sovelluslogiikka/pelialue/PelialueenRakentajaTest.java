@@ -1,6 +1,8 @@
 
 package tetris.sovelluslogiikka.pelialue;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import tetris.sovelluslogiikka.sekalaiset.TetrisPalikka;
 import tetris.sovelluslogiikka.sekalaiset.Vari;
 import tetris.sovelluslogiikka.sekalaiset.Palikka;
@@ -51,13 +53,25 @@ public class PelialueenRakentajaTest
     @Test public void pelialueenVoiVarittaa()
     {
         Vari vari = new Vari(255, 0, 0, 255);
-        
+
         rakentaja.esitaytaRivit(1);
         rakentaja.varita(vari);
+
+        for(Palikka palikka : pelialue.palikat())
+            assertTrue(((TetrisPalikka)pelialue.palikat().get(0)).vari().equals(vari));
+    }
+    
+    @Test public void varittaminenToimiiPaletinkinAvulla()
+    {
+        rakentaja.esitaytaRivit(1);
         
-        TetrisPalikka palikka = (TetrisPalikka)pelialue.palikat().get(0);
-        assertTrue(palikka.vari().equals(vari));
+        Vari[] paletti = new Vari[] { new Vari(0, 255, 0, 255), new Vari(0, 0, 255, 255) };
+        rakentaja.varita(paletti);
         
-        rakentaja.varita();
+        for(Palikka palikka : pelialue.palikat())
+        {
+            Vari vari = ((TetrisPalikka)palikka).vari();
+            assertTrue(vari.equals(paletti[0]) || vari.equals(paletti[1]));
+        }
     }
 }

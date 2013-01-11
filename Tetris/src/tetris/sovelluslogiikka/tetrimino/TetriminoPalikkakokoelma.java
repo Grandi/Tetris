@@ -67,7 +67,7 @@ public class TetriminoPalikkakokoelma implements Palikkakokoelma
             return true;
 
         for(Palikka palikka : palikat)
-            if(onVieressa(((TetriminoPalikka)palikka).sijainti(), sijainti))
+            if(palikka != null && onVieressa(((TetriminoPalikka)palikka).sijainti(), sijainti))
                 return true;
         
         return false;
@@ -137,7 +137,7 @@ public class TetriminoPalikkakokoelma implements Palikkakokoelma
     {
         try {
             for(Palikka palikka : palikat)
-                if(((TetriminoPalikka)palikka).sijainti().equals(sijainti))
+                if(/*palikka != null &&*/ ((TetriminoPalikka)palikka).sijainti().equals(sijainti))
                     return palikka;
         } catch(ConcurrentModificationException e) {}
         
@@ -184,7 +184,7 @@ public class TetriminoPalikkakokoelma implements Palikkakokoelma
     /** Kertoo, toteuttavatko nykyiset palikat tetriminosäännön. Eli ovat toistensa vieressä.
      * @return True, jos palikat toteuttavat tetriminosäännön. Muutoin false.
      */
-    private boolean toteuttaaTetriminosaannon()
+    public boolean toteuttaaTetriminosaannon()
     {
         for(Palikka palikka : palikat)
             if(!onJonkinMuunPalikanVieressa(palikka.sijainti()))

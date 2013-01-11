@@ -68,9 +68,9 @@ public class TetriminonRakentaja
     
     /** Värittää tetriminon palikat sattumanvaraisella värillä.
      */
-    public void varita()
+    public void varita(Vari[] paletti)
     {
-        varita(new Vari(satunnaisgeneraattori));
+        varita(paletti[satunnaisgeneraattori.nextInt(paletti.length)]);
     }
     
     /** Luo uuden palikan. Tämä on vain tällainen lyhentävä wrapperifunktio.
@@ -172,16 +172,15 @@ public class TetriminonRakentaja
     public void rakennaToisenTetriminonPohjalta(Tetrimino toinen)
     {
         tetrimino.alusta();
-        
-        try {
+
+        //try {
             for(Palikka palikka : toinen.palikkakokoelma().palikat())
             {
-                if(palikka == null)
-                    continue;
+                if(palikka == null) continue;
                 TetriminoPalikka uusi = new TetriminoPalikka(((TetriminoPalikka)palikka).alkuperainenSijainti(), tetrimino);
                 tetrimino.palikkakokoelma().tungePalikka(uusi);
             }
-        } catch(ConcurrentModificationException e) {}
+        //} catch(ConcurrentModificationException e) {}
         
         tetrimino.laitaAsentoon(toinen.asento());
         tetrimino.asetaSijainniksi(toinen.siirtyma());

@@ -3,6 +3,7 @@ package tetris.kayttoliittyma;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import tetris.sovelluslogiikka.pelimekaniikka.Komento;
 import tetris.sovelluslogiikka.sekalaiset.Suunta;
 
 /** Lukee näppäimistösyötettä.
@@ -28,26 +29,27 @@ public class NappaimistonLukija implements KeyListener
         switch(nappain.getKeyCode())
         {
             case KeyEvent.VK_LEFT:
-                ohjaus.siirraTetriminoa(Suunta.VASEN); 
+                ohjaus.annaKomento(Komento.SIIRTO_VASEMMALLE);
                 break;
                 
             case KeyEvent.VK_RIGHT:
-                ohjaus.siirraTetriminoa(Suunta.OIKEA);
+                ohjaus.annaKomento(Komento.SIIRTO_OIKEALLE);
                 break;
                 
             case KeyEvent.VK_DOWN:
-                ohjaus.pudotaTetrimino();
+                ohjaus.annaKomento(Komento.PUDOTTAMINEN);
                 break;
                 
             case KeyEvent.VK_UP:
-                ohjaus.kaannaTetriminoa(Suunta.OIKEA);
+                ohjaus.annaKomento(Komento.KAANTAMINEN);
                 break;
                 
             case KeyEvent.VK_P:
-                if(ohjaus.pelitilanne().onTauolla())
-                    ohjaus.pelitilanne().jatkaPelia();
-                else
-                    ohjaus.pelitilanne().tauota();
+                ohjaus.annaKomento(Komento.TAUOTTAMINEN);
+                break;
+                
+            case KeyEvent.VK_N:
+                ohjaus.annaKomento(Komento.UUSI_PELI);
                 break;
         }
     }

@@ -1,6 +1,7 @@
 
 package tetris.sovelluslogiikka.tetrimino;
 
+import tetris.sovelluslogiikka.sekalaiset.Palikka;
 import tetris.sovelluslogiikka.sekalaiset.TetrisPalikka;
 import tetris.sovelluslogiikka.sekalaiset.Vari;
 import tetris.sovelluslogiikka.sekalaiset.Sijainti;
@@ -21,7 +22,7 @@ public class TetriminonRakentajaTest
     {
         rakentaja.luoTyypillinenTetrisPalikka(new Sijainti(2, 5), 4);
 
-        assertTrue( rakentaja.rakennettuTetrimino().palikkakokoelma() instanceof TetriminoPalikkakokoelma );
+        assertTrue( ((TetriminoPalikkakokoelma)rakentaja.rakennettuTetrimino().palikkakokoelma()).toteuttaaTetriminosaannon() );
         assertEquals(4, rakentaja.rakennettuTetrimino().palikkakokoelma().lisattyja());
     }
     
@@ -38,7 +39,7 @@ public class TetriminonRakentajaTest
              })
         );
         
-        assertTrue( rakentaja.rakennettuTetrimino().palikkakokoelma() instanceof TetriminoPalikkakokoelma );
+        assertTrue( ((TetriminoPalikkakokoelma)rakentaja.rakennettuTetrimino().palikkakokoelma()).toteuttaaTetriminosaannon() );
         assertEquals(4, rakentaja.rakennettuTetrimino().palikkakokoelma().lisattyja());
     }
     
@@ -63,6 +64,22 @@ public class TetriminonRakentajaTest
         rakentaja.varita(vari);
         Tetrimino tetrimino = rakentaja.rakennettuTetrimino();
         
-        assertTrue( ((TetrisPalikka)tetrimino.palikkakokoelma().palikat().get(0)).vari().equals(vari) );
+        for(Palikka palikka : tetrimino.palikkakokoelma().palikat())
+            assertTrue(((TetrisPalikka)palikka).vari().equals(vari));
+    }
+    
+    @Test public void varittaminenToimiiPaletinkinAvulla()
+    {
+        rakentaja.luoTyypillinenTetrisPalikka(new Sijainti(5, 3), 4);
+        
+        Vari[] paletti = new Vari[] { new Vari(0, 255, 0, 255), new Vari(0, 0, 255, 255) };
+        rakentaja.varita(paletti);
+        
+        Tetrimino tetrimino = rakentaja.rakennettuTetrimino();
+        for(Palikka palikka : tetrimino.palikkakokoelma().palikat())
+        {
+            Vari vari = ((TetrisPalikka)palikka).vari();
+            assertTrue(vari.equals(paletti[0]) || vari.equals(paletti[1]));
+        }
     }
 }

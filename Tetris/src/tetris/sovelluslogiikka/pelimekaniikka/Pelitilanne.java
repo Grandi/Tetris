@@ -25,9 +25,6 @@ public class Pelitilanne
     /** Määrittää, onko peli tauotettu. */
     private boolean tauotettu;
     
-    /** Ajastaa näppäinten rekisteröitymisviiveen. */
-    private Ajastin nappainAjastin;
-    
     /** Ajastaa tetriminon tippumisnopeuden. */
     private Ajastin tiputusAjastin;
     
@@ -39,8 +36,6 @@ public class Pelitilanne
         arvot = new HashMap<Tunniste, Integer>();
         
         this.peliOhi = false;
-        
-        this.nappainAjastin = new Ajastin();
         this.tiputusAjastin = new Ajastin();
     }
     
@@ -51,8 +46,6 @@ public class Pelitilanne
         arvot.clear();
         peliOhi = false;
         tauotettu = false;
-        
-        nappainAjastin.paivita();
         tiputusAjastin.paivita();
     }
     
@@ -109,18 +102,7 @@ public class Pelitilanne
      */
     public int arvo(Tunniste tunniste)
     {
-        if(arvot.containsKey(tunniste))
-            return arvot.get(tunniste);
-        else
-            return 0;
-    }
-    
-    /** Palauttaa näppäinajastimen, joka säätelee kontrollien nopeutta/hitautta.
-     * @return Näppäinajastin.
-     */
-    public Ajastin nappainAjastin()
-    {
-        return nappainAjastin;
+        return arvot == null || !arvot.containsKey(tunniste) ? 0 : arvot.get(tunniste);
     }
     
     /** Palauttaa tiputusajastimen, joka säätelee tetriminojen putoamisviivettä.
@@ -136,6 +118,6 @@ public class Pelitilanne
      */
     public boolean voiLiikuttaa()
     {
-        return nappainAjastin.onKulunut(25) && !peliOhi && !tauotettu;
+        return !peliOhi && !tauotettu;
     }
 }

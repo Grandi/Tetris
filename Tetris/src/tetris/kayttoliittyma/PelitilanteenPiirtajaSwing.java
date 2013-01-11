@@ -15,9 +15,7 @@ import tetris.sovelluslogiikka.pelimekaniikka.PelitilanteenPiirtaja;
 import tetris.sovelluslogiikka.sekalaiset.Alue;
 import tetris.sovelluslogiikka.sekalaiset.Palikka;
 import tetris.sovelluslogiikka.sekalaiset.Palikkakokoelma;
-import tetris.sovelluslogiikka.sekalaiset.Sijainti;
 import tetris.sovelluslogiikka.sekalaiset.TetrisPalikka;
-import tetris.sovelluslogiikka.*;
 import tetris.sovelluslogiikka.pelimekaniikka.Asetukset;
 import tetris.sovelluslogiikka.sekalaiset.Vari;
 
@@ -26,33 +24,30 @@ import tetris.sovelluslogiikka.sekalaiset.Vari;
  */
 public class PelitilanteenPiirtajaSwing extends JPanel implements PelitilanteenPiirtaja
 {
+    /** Palikkakokoelmat, joita aiotaan piirtää. */
     private ArrayList<Palikkakokoelma> palikkakokoelmat;
-    private Pelitilanne pelitilanne;
-    private Asetukset asetukset;
     
+    /** Pelitilanne, koska on hyvä tietää esim. koska peli on päättynyt. */
+    private Pelitilanne pelitilanne;
+    
+    /** Alue, jolle piirretään. */
     private Alue piirtoalue;
-    private int palikanLeveys, palikanKorkeus;
     
     /**
-     * @param piirtoalue Alue, jolle piirretään. 
+     * @param piirtoalue Alue, jolle piirretään.
+     * @param pelitilanne Pelitilanne, jonka mukaan toimitaan.
      */
-    public PelitilanteenPiirtajaSwing(Alue piirtoalue, Pelitilanne pelitilanne, Asetukset asetukset)
+    public PelitilanteenPiirtajaSwing(Alue piirtoalue, Pelitilanne pelitilanne)
     {
         this.palikkakokoelmat = new ArrayList<Palikkakokoelma>();
-        this.asetukset = asetukset;
         this.piirtoalue = piirtoalue;
         
         setPreferredSize(new Dimension(((int)piirtoalue.leveys() + 1) * 32, ((int)piirtoalue.korkeus() + 1) * 32));
-        
-        this.palikanLeveys = 32;
-        this.palikanKorkeus = this.palikanLeveys;
-        
         this.pelitilanne = pelitilanne;
     }
     
     @Override public void paivitaTilanne()
     {
-        setPreferredSize(new Dimension(((int)piirtoalue.leveys() + 1) * 32, ((int)piirtoalue.korkeus() + 1) * 32));
         super.repaint();
     }
     
@@ -68,8 +63,7 @@ public class PelitilanteenPiirtajaSwing extends JPanel implements PelitilanteenP
         ((Graphics2D)grafiikat).setRenderingHint(
             RenderingHints.KEY_TEXT_ANTIALIASING,
             RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        
-        piirraTausta(grafiikat);
+
         piirraPalikat(grafiikat);
 
         if(pelitilanne.peliOnPaattynyt())
@@ -78,22 +72,36 @@ public class PelitilanteenPiirtajaSwing extends JPanel implements PelitilanteenP
             piirraTaukoRuutu(grafiikat);
     }
     
+    /** Piirtää vaakasuunnassa keskitettyä tekstiä.
+     * @param grafiikat Graphics-olio; piirtämisen kohde.
+     * @param x Tekstin keskiosan x-koordinaatti.
+     * @param y Tekstin y-koordinaatti.
+     * @param teksti Teksti, joka piirretään.
+     */
     private void piirraKeskitettyaTekstia(Graphics grafiikat, int x, int y, String teksti)
     {
         grafiikat.drawString(teksti, x - (teksti.length() * ((Graphics2D)grafiikat).getFont().getSize()) / 4, y);
     }
     
+    /** Piirtää ruudun siitä, että peli on tauolla.
+     * @param grafiikat 
+     */
     private void piirraTaukoRuutu(Graphics grafiikat)
     {
         grafiikat.setColor(Color.BLACK);
         grafiikat.setFont(new Font("Arial", Font.BOLD, 48));
 
-        piirraKeskitettyaTekstia(grafiikat, ((int)piirtoalue.leveys() + 1) * palikanLeveys /2, 200, "Tauotettu" );
+        piirraKeskitettyaTekstia(grafiikat, ((int)piirtoalue.leveys() + 1) * 16, 200, "Tauotettu" );
 
         grafiikat.setFont(new Font("Verdana", Font.BOLD, 18));
-        piirraKeskitettyaTekstia(grafiikat, ((int)piirtoalue.leveys()) * palikanLeveys /2, 240, "Paina \"P\" Jatkaaksesi." );
+        piirraKeskitettyaTekstia(grafiikat, ((int)piirtoalue.leveys()) * 16, 240, "Paina \"P\" Jatkaaksesi." );
     }
     
+    /** Tunkee alkunollia luvun eteen, koska se näyttää kivalta. Tulee game over -ruutuun.
+     * @param luku Luku, jolle alkunollia tahdotaan.
+     * @param pituus Pituus, joka luvun merkkijonoesitykselle tahdotaan.
+     * @return Palauttaa alkunollitetun luvun merkkijonoesityksen.
+     */
     private String tungeAlkunollia(int luku, int pituus)
     {
         String merkkijono = new Integer(luku).toString();
@@ -105,12 +113,15 @@ public class PelitilanteenPiirtajaSwing extends JPanel implements PelitilanteenP
         return rakentaja.toString();
     }
     
+    /** Piirtää ruudun merkkinä pelin päättymisestä.
+     * @param grafiikat Graphics-olio; piirtämisen kohde.
+     */
     private void piirraGameOverRuutu(Graphics grafiikat)
     {
         grafiikat.setColor(Color.BLACK);
         grafiikat.setFont(new Font("Arial", Font.BOLD, 48));
         
-        piirraKeskitettyaTekstia(grafiikat, ((int)piirtoalue.leveys() + 1) * palikanLeveys /2 + 20, 200, "Peli ohi!" );
+        piirraKeskitettyaTekstia(grafiikat, ((int)piirtoalue.leveys() + 1) * 16 + 20, 200, "Peli ohi!" );
         
         grafiikat.setFont(new Font("Verdana", Font.BOLD, 24));
         
@@ -118,64 +129,62 @@ public class PelitilanteenPiirtajaSwing extends JPanel implements PelitilanteenP
         grafiikat.drawString("Taso:    ", 90, 310);
         grafiikat.drawString("Rivejä:  ", 90, 340);
         
-        grafiikat.drawString(tungeAlkunollia(pelitilanne.arvo(Pelitilanne.Tunniste.PISTEET), 2),            220, 280);
-        grafiikat.drawString(tungeAlkunollia(( pelitilanne.arvo(Pelitilanne.Tunniste.VAIKEUSTASO) + 1), 2), 220, 310);
-        grafiikat.drawString(tungeAlkunollia(pelitilanne.arvo(Pelitilanne.Tunniste.RIVIT), 2),              220, 340);        
-    }
-
-    private void piirraTausta(Graphics grafiikat)
-    {
-        /*grafiikat.setColor(new Color(50, 50, 50));
-        grafiikat.fillRect((int)piirtoalue.alkupiste().x(), (int)piirtoalue.alkupiste().y(),
-                ((int)piirtoalue.leveys() + 1) * palikanLeveys + 170, ((int)piirtoalue.korkeus() + 1) * palikanKorkeus);*/
+        int rivit = pelitilanne.arvo(Pelitilanne.Tunniste.RIVIT);
+        int ihannepistemaara = rivit/4 * 9 + (rivit % 4 == 0 ? 0 : 2 * (rivit % 4 - 1) + 1);
         
-        /*grafiikat.setColor(new Color(200, 200, 200));
-        grafiikat.fillRect((int)piirtoalue.alkupiste().x(), (int)piirtoalue.alkupiste().y(),
-                ((int)piirtoalue.leveys() + 1) * palikanLeveys, ((int)piirtoalue.korkeus() + 1) * palikanKorkeus );*/
+        grafiikat.drawString(
+                tungeAlkunollia(pelitilanne.arvo(Pelitilanne.Tunniste.PISTEET), 2) + "/" + tungeAlkunollia(ihannepistemaara, 2),
+                220, 280);
+        
+        grafiikat.drawString(tungeAlkunollia(( pelitilanne.arvo(Pelitilanne.Tunniste.VAIKEUSTASO) + 1), 2), 220, 310);
+        grafiikat.drawString(tungeAlkunollia(rivit, 2),              220, 340);        
     }
     
+    /** Piirtää kaikki pelin palikat.
+     * @param grafiikat Graphics-olio; piirtämisen kohde.
+     */
     private void piirraPalikat(Graphics grafiikat)
     {
         for(Palikkakokoelma kokoelma : palikkakokoelmat)
             piirraPalikat(grafiikat, kokoelma);
     }
     
+    /** Piirtää kaikki palikkakokoelman palikat.
+     * @param grafiikat Graphics-olio; piirtämisen kohde.
+     * @param kokoelma Palikkakokoelma, jonka palikat tahdotaan piirtää.
+     */
     private void piirraPalikat(Graphics grafiikat, Palikkakokoelma kokoelma)
     {
-        try
-        {
+        try {
             for(Palikka palikka : kokoelma.palikat())
-                piirra(grafiikat, (TetrisPalikka)palikka);
-        }
-        catch(ConcurrentModificationException exception)
-        {}
+                if(palikka != null)
+                    piirra(grafiikat, (TetrisPalikka)palikka);
+        } catch(ConcurrentModificationException e) {}
     }
     
+    /** Piirtää ruudulle pyöristetyn palikan.
+     * @param grafiikat Graphics-olio; piirron kohde.
+     * @param x Palikan x-koordinaatti.
+     * @param y Palikan y-koordinaatti.
+     * @param leveys Palikan leveys.
+     * @param korkeus Palikan korkeus.
+     */
     private void piirraPyoristettyPalikka(Graphics grafiikat, float x, float y, float leveys, float korkeus)
     {
         grafiikat.fillRect((int)x + 1, (int)y, (int)leveys - 2, (int)korkeus);
         grafiikat.fillRect((int)x, (int)y + 1, (int)leveys, (int)korkeus - 2);
     }
     
+    /** Piirtää TetrisPalikan ruudulle.
+     * @param grafiikat Graphics-olio; piirron kohde.
+     * @param palikka TetrisPalikka, joka piirretään.
+     */
     private void piirra(Graphics grafiikat, TetrisPalikka palikka)
     {
         Vari vari = palikka.vari();        
-        int peittavyys = /*pelitilanne.peliOnPaattynyt() ||*/ pelitilanne.onTauolla() ? 20 : vari.peittavyys();
-            
-        if(asetukset.kayttaaVareja())
-            grafiikat.setColor(new Color(vari.punainen(), vari.vihrea(), vari.sininen(), peittavyys));            
-        else
-            grafiikat.setColor(new Color(50, 50, 50, peittavyys));
+        int peittavyys = !pelitilanne.peliOnPaattynyt() && pelitilanne.onTauolla() ? 20 : vari.peittavyys();
 
-        piirraPyoristettyPalikka(grafiikat, palikka.sijainti().x() * palikanLeveys + 1, palikka.sijainti().y() * palikanKorkeus + 1, palikanLeveys - 2, palikanKorkeus - 2);
-         
-        // Debuggausta, ei tule lopulliseen työhön:
-        /*grafiikat.setColor(new Color(200, 100, 100));
-        if(palikka instanceof TetriminoPalikka)
-        {
-            Sijainti k = ((TetriminoPalikka)palikka).omistajaTetrimino().sijainti();
-            grafiikat.fillRect((int)k.x() * palikanLeveys -1, (int)k.y() * palikanKorkeus -1, 2, 2);
-        }
-         */
+        grafiikat.setColor(new Color(vari.punainen(), vari.vihrea(), vari.sininen(), peittavyys));
+        piirraPyoristettyPalikka(grafiikat, palikka.sijainti().x() * 32 + 1, palikka.sijainti().y() * 32 + 1, 30, 30);
     }
 }

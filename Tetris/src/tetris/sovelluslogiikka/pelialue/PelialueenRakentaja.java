@@ -83,10 +83,10 @@ public class PelialueenRakentaja
     
     /** Värittää pelialueen palikat sattumanvaraisella värillä.
      */
-    public void varita()
+    public void varita(Vari[] paletti)
     {
         for(Palikka palikka : pelialue.palikat())
-            ((TetrisPalikka)palikka).vari().aseta(new Vari(new Random()));
+            ((TetrisPalikka)palikka).vari().aseta(paletti[satunnaisgeneraattori.nextInt(paletti.length)]);
     }
     
     /** Esitäyttää halutun rivin. Jättää yhden sattumanvaraisen palikan vajaaksi.
@@ -99,7 +99,7 @@ public class PelialueenRakentaja
         int tyhjaksiJatettava = -1;
         
         do
-            tyhjaksiJatettava = satunnaisgeneraattori.nextInt((int)pelialue.alue().leveys()) + (int)pelialue.alue().alkupiste().x();
+            tyhjaksiJatettava = satunnaisgeneraattori.nextInt((int)pelialue.alue().leveys() + 1) + (int)pelialue.alue().alkupiste().x();
         while(tyhjaksiJatettava == eiSaaJaadaTyhjaksi);
         
         for(float x = pelialue.alue().alkupiste().x(); x <= pelialue.alue().paatepiste().x(); x++)

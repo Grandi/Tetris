@@ -25,6 +25,9 @@ public class TetrisTormays implements Tormays
     {
         tormaykset = new ArrayList<Tormays>();
         
+        if(tetrimino.palikkakokoelma().lisattyja() <= 0)
+            return;
+        
         try {
             for(Palikka palikka : tetrimino.palikkakokoelma().palikat())
             {

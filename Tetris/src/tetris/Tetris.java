@@ -8,6 +8,6 @@ public class Tetris
 {
     public static void main(String[] args)
     { 
-        new Kayttoliittyma().run();
+        new Kayttoliittyma();
     }
 }
