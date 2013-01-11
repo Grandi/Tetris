@@ -20,7 +20,7 @@ public class TetriminonRakentajaTest
     
     @Test public void tetriminojenSatunnaisgenerointiToimii()
     {
-        rakentaja.luoTyypillinenTetrisPalikka(new Sijainti(2, 5), 4);
+        rakentaja.luoTyypillinenTetrimino(new Sijainti(2, 5), 4);
 
         assertTrue( ((TetriminoPalikkakokoelma)rakentaja.rakennettuTetrimino().palikkakokoelma()).toteuttaaTetriminosaannon() );
         assertEquals(4, rakentaja.rakennettuTetrimino().palikkakokoelma().lisattyja());
@@ -60,7 +60,7 @@ public class TetriminonRakentajaTest
     {
         Vari vari = new Vari(255, 0, 0, 255);
         
-        rakentaja.luoTyypillinenTetrisPalikka(new Sijainti(5, 3), 4);
+        rakentaja.luoTyypillinenTetrimino(new Sijainti(5, 3), 4);
         rakentaja.varita(vari);
         Tetrimino tetrimino = rakentaja.rakennettuTetrimino();
         
@@ -70,7 +70,7 @@ public class TetriminonRakentajaTest
     
     @Test public void varittaminenToimiiPaletinkinAvulla()
     {
-        rakentaja.luoTyypillinenTetrisPalikka(new Sijainti(5, 3), 4);
+        rakentaja.luoTyypillinenTetrimino(new Sijainti(5, 3), 4);
         
         Vari[] paletti = new Vari[] { new Vari(0, 255, 0, 255), new Vari(0, 0, 255, 255) };
         rakentaja.varita(paletti);

@@ -180,7 +180,7 @@ public class Ohjaus implements Runnable
         Sijainti sijainti = new Sijainti(pelialue.alue().alkupiste().x() + pelialue.alue().leveys()/2, 0);
         TetriminonRakentaja rakentaja = new TetriminonRakentaja(tetrimino, new Random());
         
-        rakentaja.luoTyypillinenTetrisPalikka(sijainti, asetukset.palikoidenMaaraTetriminossa());
+        rakentaja.luoTyypillinenTetrimino(sijainti, asetukset.palikoidenMaaraTetriminossa());
         rakentaja.varita(asetukset.varipaletti());
     }
     

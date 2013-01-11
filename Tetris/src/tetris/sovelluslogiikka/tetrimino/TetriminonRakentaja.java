@@ -48,10 +48,11 @@ public class TetriminonRakentaja
             tungeUusiPalikkaSattumanvaraisesti();
     }
     
-    /** Luo neljä palikkaa sisältävän tetriminon.
+    /** Luo tyypillisen tetriminon.
      * @param sijainti Sijainti, johon tetrimino tahdotaan.
+     * @koko Montako palikkaa tahdotaan.
      */
-    public void luoTyypillinenTetrisPalikka(Sijainti sijainti, int koko)
+    public void luoTyypillinenTetrimino(Sijainti sijainti, int koko)
     {
         tungeUusiaSatunnaisiaPalikoita(koko);
         tetrimino.asetaSijainniksi(sijainti);

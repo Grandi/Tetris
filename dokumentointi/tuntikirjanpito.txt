@@ -71,4 +71,16 @@ Tuntikirjanpito
 	07:00-21:00 - Kirjoitin sovelluslogiikkaa, käyttöliittymää ja testejä.
 		Päivitin kaikille luokille ja julkisille metodeille javadocit.
 		Piirsin myös kaksi sekvenssikaaviota ja uuden luokkakaavion deadlineen.
+	
+7.1.2012
+	16:00-18:00 - Testien koodaamista.
+	
+9.1.2012
+	12:00-14:00 - Asetusvalikon koodaamista.
+	
+10.1.2012
+	10:00-21:00 - Viilailua ja bugien korjailua.
+	
+11.1.2012
+	15:00-19:00 - Dokumentaation päivittelyä, uusien sekvenssikaavioiden luontia jne.
 
